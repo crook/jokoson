@@ -23,15 +23,15 @@ from .models import Device, Order, DEVICE_STYLE_CHOICES
 #        instance.save()
 #        return instance
 
-class DeviceSerializer(serializers.ModelSerializer):
+class DeviceSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Device
-        fields = ('id', 'sn', 'public', 'style', 'created_date', 'updated_date', 'owner')
+        fields = ('url', 'id', 'sn', 'public', 'style', 'created_date', 'updated_date', 'owner')
 
 
-class UserSerializer(serializers.ModelSerializer):
-        devices = serializers.PrimaryKeyRelatedField(many=True, queryset=Device.objects.all())
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+        devices = serializers.HyperlinkedRelatedField(many=True, view_name='device-detail', read_only=True)
         class Meta:
             model = User
-            fields = ('id', 'username', 'devices')
+            fields = ('url', 'id', 'username', 'devices')

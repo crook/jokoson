@@ -48,7 +48,8 @@ class OrderSerializer(serializers.ModelSerializer):
     buyer = serializers.HyperlinkedRelatedField(many=False, view_name='user-detail', read_only=True)
     class Meta:
         model = Order
-        exclude = ('equip_id',)
+        #exclude = ('equip_id',)
+        fields = '__all__'
         depth = 1
 
     def create(self, validate_data):
@@ -78,7 +79,8 @@ class GpssensorSerializer(serializers.ModelSerializer):
     gpsdatas = serializers.HyperlinkedRelatedField(many=True, view_name='gpsdata-detail', read_only=True)
     class Meta:
         model= Gpssensor
-        exclude = ('equip_id', 'category_id', 'vendor_id',)
+        #exclude = ('equip_id', 'category_id', 'vendor_id',)
+        fields = '__all__'
         depth = 1
 
     def create(self, validate_data):
@@ -101,7 +103,8 @@ class GpsdataSerializer(serializers.ModelSerializer):
     #sensor = GpssensorSerializer(read_only=True)
     class Meta:
         model = Gpsdata
-        exclude = ('sensor_id',)
+        #exclude = ('sensor_id',)
+        fields = '__all__'
         depth = 1
 
     def create(self, validate_data):

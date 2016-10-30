@@ -50,6 +50,13 @@ urlpatterns = format_suffix_patterns([
         name='category-detail'),
 ])
 
+
+# Query URL
+urlpatterns += [
+    url('^orders/(?P<username>.+)/$', OrderList.as_view()),
+
+]
+
 # Login and logout views for the browsable API
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',

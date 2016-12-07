@@ -13,7 +13,7 @@ function json_escape
 function get_id
 {
     json_data=$1
-    ID=`echo $json_data | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["id"])'`
+    ID=`echo $json_data | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["id"])'`
     echo -n $ID
 }
 

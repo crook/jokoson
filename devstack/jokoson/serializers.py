@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from jokoson.models import Equip, Order, Vendor, Category, Gpssensor, Gpsdata
+from jokoson.models import Equip, Order, Vendor, Category, Gpssensor, Gpsdata, UploadFile
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,3 +121,8 @@ class GpsdataSerializer(serializers.ModelSerializer):
         except:
             raise serializers.ValidationError("Not existed Gpssenor id: %s" %value)
         return value
+
+class UploadFileSerializer(serializers.ModelSerializer):
+   class Meta:
+       model = UploadFile
+       fields = ('pk', 'csvfile')

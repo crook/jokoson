@@ -74,3 +74,9 @@ class Gpsdata(models.Model):
     y = models.FloatField()
     height = models.FloatField()
     sensor = models.ForeignKey('Gpssensor', related_name='gpsdatas')
+
+
+class UploadFile(models.Model):
+    #Todo: 1)Change the name uploaded file to hash code
+    #Todo: 2)Do real data import job after upload
+    csvfile = models.FileField()

@@ -4,13 +4,15 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from jokoson.models import Equip, Order, Vendor, Gpssensor, Gpsdata, Category
+from jokoson.models import Equip, Order, Vendor, Gpssensor, Gpsdata, Category, UploadFile
 from jokoson.serializers import EquipSerializer, OrderSerializer, \
-    UserSerializer, VendorSerializer, GpssensorSerializer, GpsdataSerializer, CategorySerializer
+    UserSerializer, VendorSerializer, GpssensorSerializer, GpsdataSerializer, CategorySerializer, \
+    UploadFileSerializer
 from jokoson.permissions import IsOwnerOrReadOnly
 
 MODELS = ['user', 'order', 'equip','vendor', 'gpssensor', 'gpsdata', 'category']
@@ -124,3 +126,8 @@ class ModelList(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         self.serializer_class = OrderSerializer
+
+
+class UploadFileViewSet(viewsets.ModelViewSet):
+    queryset = UploadFile.objects.all()
+    serializer_class = UploadFileSerializer

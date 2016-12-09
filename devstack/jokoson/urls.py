@@ -2,7 +2,12 @@ from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from jokoson.views import api_root, EquipList, EquipDetail, UserList, UserDetail,\
     OrderList, OrderDetail, VendorList, VendorDetail, CategoryList, CategoryDetail,\
-    GpssensorList, GpssensorDetail, GpsdataList, GpsdataDetail
+    GpssensorList, GpssensorDetail, GpsdataList, GpsdataDetail, UploadFileViewSet
+
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'file', UploadFileViewSet)
 
 urlpatterns = format_suffix_patterns([
     url(r'^$', api_root),
@@ -62,3 +67,5 @@ urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',
         namespace='rest_framework')),
 ]
+
+urlpatterns += router.urls

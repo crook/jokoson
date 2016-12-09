@@ -13,12 +13,12 @@ Example:
 
 
 # create one category
-ranc-m01:devstack ranc$ curl -X POST -u admin:zaq12WSX  -H "Content-Type: application/json" -d '{"description":"images"}' http://10.110.126.208:8888/categories/
-{"id":1,"description":"images"}
-ranc-m01:devstack ranc$ curl -X POST -u admin:zaq12WSX  -H "Content-Type: application/json" -d '{"description":"food"}' http://10.110.126.208:8888/categories/
-{"id":2,"description":"food"}
-ranc-m01:devstack ranc$ curl http://10.110.126.208:8888/categories/
-[{"id":1,"description":"images"},{"id":2,"description":"food"}]
+    ranc-m01:devstack ranc$ curl -X POST -u admin:zaq12WSX  -H "Content-Type: application/json" -d '{"description":"images"}' http://10.110.126.208:8888/categories/
+    {"id":1,"description":"images"}
+    ranc-m01:devstack ranc$ curl -X POST -u admin:zaq12WSX  -H "Content-Type: application/json" -d '{"description":"food"}' http://10.110.126.208:8888/categories/
+    {"id":2,"description":"food"}
+    ranc-m01:devstack ranc$ curl http://10.110.126.208:8888/categories/
+    [{"id":1,"description":"images"},{"id":2,"description":"food"}]
 
 # create one vendor
 ranc-m01:~ ranc$ curl -X POST -u admin:zaq12WSX  -H "Content-Type: application/json"  -d '{"name":"EMC", "city":"Shanghai", "cell_phone":"123", "office_phone":"123456", "address1":"addrss1","address2":"address2"}' http://10.110.126.208:8888/vendors/

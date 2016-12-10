@@ -12,7 +12,8 @@ http://54.238.155.90:8888/
 Upload file：http://54.238.155.90:8888/file/    (must login)
 
 Export user/order/equp tables to one CSV file: 
-http://54.238.90.8888/exportuser/  (TODO: add permission check to only allow admin to export data)
+
+http://54.238.155.90:8888/exportuser/  (TODO: add permission check to only allow admin to export data)
 
 Example:
 

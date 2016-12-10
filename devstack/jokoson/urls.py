@@ -2,7 +2,8 @@ from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from jokoson.views import api_root, EquipList, EquipDetail, UserList, UserDetail,\
     OrderList, OrderDetail, VendorList, VendorDetail, CategoryList, CategoryDetail,\
-    GpssensorList, GpssensorDetail, GpsdataList, GpsdataDetail, UploadFileViewSet
+    GpssensorList, GpssensorDetail, GpsdataList, GpsdataDetail, UploadFileViewSet, \
+    user_and_order_csv_view
 
 from rest_framework import routers
 
@@ -69,3 +70,7 @@ urlpatterns += [
 ]
 
 urlpatterns += router.urls
+
+urlpatterns += [
+    url('^exportuser/', user_and_order_csv_view )
+]

@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, renderer_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
@@ -14,6 +14,8 @@ from jokoson.serializers import EquipSerializer, OrderSerializer, \
     UserSerializer, VendorSerializer, GpssensorSerializer, GpsdataSerializer, CategorySerializer, \
     UploadFileSerializer
 from jokoson.permissions import IsOwnerOrReadOnly
+from rest_framework_csv.renderers import CSVRenderer
+
 
 MODELS = ['user', 'order', 'equip','vendor', 'gpssensor', 'gpsdata', 'category']
 
@@ -131,3 +133,27 @@ class ModelList(generics.ListCreateAPIView):
 class UploadFileViewSet(viewsets.ModelViewSet):
     queryset = UploadFile.objects.all()
     serializer_class = UploadFileSerializer
+
+
+class UserAndOrderCSVRender(CSVRenderer):
+    header = ['user_id', 'user_name', 'order_id', 'order_time', 'equip_id', 'equip_model']
+
+
+@api_view(['GET'])
+@renderer_classes((UserAndOrderCSVRender,))
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
+def user_and_order_csv_view(request):
+    orders = Order.objects.all()
+    content = []
+    for order in orders:
+        content += [
+            {
+                'user_id': order.buyer.id,
+                'user_name': order.buyer.username,
+                'order_id': order.pk,
+                'order_time': order.signtime,
+                'equip_id': order.equip.pk,
+                'equip_model': order.equip.model,
+            }
+        ]
+    return Response(content)

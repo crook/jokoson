@@ -10,6 +10,7 @@ REST API endpoint:
 http://54.238.155.90:8888/
 
 Upload file：http://54.238.155.90:8888/file/    (must login)
+Export user&order&equp table: http://54.238.90.8888/exportuser/ (no need login, TODO: add permission)
 
 Example:
 

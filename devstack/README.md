@@ -9,7 +9,7 @@ user/password: admin/zaq12WSX
 REST API endpoint:
 http://54.238.155.90:8888/
 
-Upload file：http://54.238.155.90:8888/file/    (must login)
+Upload file: ttp://54.238.155.90:8888/file/ (must login)
 
 Export user/order/equp tables to one CSV file: 
 

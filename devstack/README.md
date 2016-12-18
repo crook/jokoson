@@ -82,3 +82,9 @@ Password (again):
 Superuser created successfully.
 ranc-m01:devstack ranc$ python3 manage.py loaddata fixtures/initial_data.json
 Installed 9 object(s) from 1 fixture(s)
+
+
+## Docker Run
+
+docker build --rm -t jokoson ./
+docker run -it -p 8888:8888 jokoson

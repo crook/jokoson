@@ -19,6 +19,7 @@ from rest_framework_csv.renderers import CSVRenderer
 
 MODELS = ['user', 'order', 'equip','vendor', 'gpssensor', 'gpsdata', 'category']
 
+#@api_view(['GET', 'DELETE'])
 @api_view(['GET'])
 @permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def api_root(request, format=None):
@@ -35,7 +36,7 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
-class UserDetail(generics.RetrieveAPIView):
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 

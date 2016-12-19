@@ -19,7 +19,6 @@ from rest_framework_csv.renderers import CSVRenderer
 
 MODELS = ['user', 'order', 'equip','vendor', 'gpssensor', 'gpsdata', 'category']
 
-#@api_view(['GET', 'DELETE'])
 @api_view(['GET'])
 @permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def api_root(request, format=None):

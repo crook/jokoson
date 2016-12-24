@@ -1,0 +1,7 @@
+django
+djangorestframework
+django-filter
+djangorestframework-csv
+mysql-server
+mysqlclient
+libmysqlclient-dev

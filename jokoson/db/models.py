@@ -46,8 +46,7 @@ class Vendor(models.Model):
 #    description
 class Category(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(max_length=1024,
-                                   default='Categoty Description')
+    description = models.TextField(max_length=1024, default='')
 
 
 # Equipment information to include GPS information
@@ -70,22 +69,14 @@ class Equip(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
-    # Equip Serial Number
-    sn = models.CharField(max_length=128, default='The Serial Number')
-    # Equip type
+    sn = models.CharField(max_length=128)
     model = models.CharField(max_length=64)
-    # Open to sell or not
     status = models.IntegerField()
-    health = models.TextField(default='OK')
-    # TODO: Let user to file file/video to show thie equip
-    # image = models.ImageField(upload_to=None)
-    # video = models.BinaryField()
+    health = models.IntegerField()
 
-    description = models.TextField(max_length=1024,
-                                   default='Describe this equip')
+    description = models.TextField(max_length=1024, default='')
     vendor = models.ForeignKey('Vendor', related_name='equips')
-    category = models.ForeignKey('Category', related_name='equips', blank=True,
-                                 null=True)
+    category = models.ForeignKey('Category', related_name='equips')
     gps_status = models.IntegerField()
     gps_model = models.CharField(max_length=64)
     gps_batterypercent = models.IntegerField()

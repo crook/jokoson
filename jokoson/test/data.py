@@ -18,18 +18,7 @@ class TestData(object):
         },
     }
 
-    category = {
-        'star-8': {
-            'name': 'star-8',
-            'description': 'This is a star-8!',
-        },
-        'star-10': {
-            'name': 'star-10',
-            'description': 'This is a star-10!',
-        },
-    }
-
-    vendor = {
+    manufacture = {
         'Hako': {
             'name': 'Hako',
             'city': 'Bad Oldesloe',
@@ -43,18 +32,38 @@ class TestData(object):
             'cell_phone': '+49 (0) 7195 / 14-0',
             'office_phone': '+49 (0) 7195 / 14-0',
             'address': 'Alfred-Kärcher-Strasse 28-40 ',
+        },
+        'Haulotte': {
+            "name": "Haulotte",
+            "city": "Virginia",
+            "cell_phone": "",
+            "office_phone": "(001)757-689-2146",
+            "address": "3409 Chandler Creek Rd. Virginia Beach VA 23453 United States"
         }
+
+    }
+
+    model = {
+        'star-8': {
+            'name': 'star-8',
+            'description': 'This is a star-8!',
+            'manufacture': manufacture['Haulotte']['name'],
+        },
+        'star-10': {
+            'name': 'star-10',
+            'description': 'This is a star-10!',
+            'manufacture': manufacture['Haulotte']['name'],
+        },
     }
 
     equip = {
-        'star-10-1111111': {
-            'sn': 'star-10-1111111',
-            'model': 'star-10',
+        'ME 112104': {
+            'sn': 'ME 112104',
+            'description': 'This is ME 112104!',
+            'manufacture': manufacture['Haulotte']['name'],
+            'model': model['star-10']['name'],
             'status': 1,
-            'health': 1,
-            'description': 'This is a star-10-1111111!',
-            'vendor': vendor['Hako']['name'],
-            'category': category['star-10']['name'],
+            'health': 'OK',
             'gps_status': 1,
             'gps_model': 'gps_model-1',
             'gps_batterypercent': 60,
@@ -63,43 +72,41 @@ class TestData(object):
             "y": 120.86,
             "z": 120.86,
         },
-        'star-10-2222222': {
-            'sn': 'star-10-2222222',
-            'model': 'star-10',
+        'ME 111501': {
+            'sn': 'ME 111501',
+            'description': 'This is ME 111501!',
+            'manufacture': manufacture['Haulotte']['name'],
+            'model': model['star-10']['name'],
             'status': 1,
-            'health': 2,
-            'description': 'This is a star-10-1111111!',
-            'vendor': vendor['Hako']['name'],
-            'category': category['star-10']['name'],
-            'gps_status': 1,
-            'gps_model': 'gps_model-2',
-            'gps_batterypercent': 70,
-            'gps_time': '2017-10-30T12:38:57Z',
-            'x': 70.12,
-            "y": 130.86,
-            "z": 130.86,
+            'health': 'BAD',
+            'gps_status': None,
+            'gps_model': None,
+            'gps_batterypercent': None,
+            'gps_time': None,
+            'x': None,
+            "y": None,
+            "z": None,
         },
     }
-
     orders = {
-        'star-10-1111111': {
-            'equip_sn': equip['star-10-1111111']['sn'],
-            'starttime':'2017-10-30T12:38:57Z',
-            'endtime':'2018-10-30T12:38:57Z',
+        'ME 112104': {
+            'tenant': None,
+            'equip_sn': equip['ME 112104']['sn'],
+            'starttime': '2017-10-30T12:38:57Z',
+            'endtime': '2018-10-30T12:38:57Z',
             'total_cost': 9000.00,
             'valid': True,
             'duration': '365 00:00:00',
-            'tenant': None,
+
         },
-        'star-10-2222222': {
-            'equip_sn': equip['star-10-1111111']['sn'],
-            'starttime':'2017-10-30T12:38:57Z',
-            'endtime':'2018-10-30T12:38:57Z',
+        'ME 111501': {
+            'tenant': None,
+            'equip_sn': equip['ME 111501']['sn'],
+            'starttime': '2017-10-30T12:38:57Z',
+            'endtime': '2018-10-30T12:38:57Z',
             'total_cost': 10000.00,
             'valid': True,
             'duration': '365 00:00:00',
-            'tenant': None,
         },
     }
-
 

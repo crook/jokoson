@@ -4,7 +4,7 @@ DB design Issue:
     3. Add Admin table
     4. Add Company table
     5. Add Role Table
-    6. Add Vendor Table
+    6. Add Manufacture Table
     8. Add SN/Disc to Equip
     9. Add Catagory table which id is one of foriegn keys of equip
     10. Add hist table, key is a incremental id 'order id', 'equip id', 

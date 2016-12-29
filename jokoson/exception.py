@@ -119,42 +119,42 @@ class NoPermissionToDeleteEquip(APIException):
     default_code = 'delete_equip_failed'
 
 
-class NoPermissionToCreateVendor(APIException):
+class NoPermissionToCreateManufacture(APIException):
     status_code = STATUS.HTTP_403_FORBIDDEN
     default_detail = _(
-        'Forbidden or No Permission to create vendor.')
-    default_code = 'create_vendor_failed'
+        'Forbidden or No Permission to create manufacture.')
+    default_code = 'create_manufacture_failed'
 
 
-class NoPermissionToModifyVendor(APIException):
+class NoPermissionToModifyManufacture(APIException):
     status_code = STATUS.HTTP_403_FORBIDDEN
     default_detail = _(
-        'Forbidden or No Permission to modify vendor.')
-    default_code = 'modify_vendor_failed'
+        'Forbidden or No Permission to modify manufacture.')
+    default_code = 'modify_manufacture_failed'
 
 
-class NoPermissionToDeleteVendor(APIException):
+class NoPermissionToDeleteManufacture(APIException):
     status_code = STATUS.HTTP_403_FORBIDDEN
     default_detail = _(
-        'Forbidden or No Permission to delete vendor.')
-    default_code = 'delete_vendor_failed'
+        'Forbidden or No Permission to delete manufacture.')
+    default_code = 'delete_manufacture_failed'
 
 
-class NoPermissionToCreateCategory(APIException):
+class NoPermissionToCreateModel(APIException):
     status_code = STATUS.HTTP_403_FORBIDDEN
     default_detail = _(
         'Forbidden or No Permission to create category.')
     default_code = 'create_category_failed'
 
 
-class NoPermissionToModifyCategory(APIException):
+class NoPermissionToModifyModel(APIException):
     status_code = STATUS.HTTP_403_FORBIDDEN
     default_detail = _(
         'Forbidden or No Permission to modify category.')
     default_code = 'modify_category_failed'
 
 
-class NoPermissionToDeleteCategory(APIException):
+class NoPermissionToDeleteModel(APIException):
     status_code = STATUS.HTTP_403_FORBIDDEN
     default_detail = _(
         'Forbidden or No Permission to delete category.')

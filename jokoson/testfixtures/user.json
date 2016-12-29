@@ -1,0 +1,36 @@
+[{
+	"model": "auth.user",
+	"pk": 1,
+	"fields": {
+		"password": "pbkdf2_sha256$30000$XWBZudLQxVYu$HO0dxSQbBWq8H60sr+ZtleQZ4dLDxoD6CaRaRVEP9GY=",
+		"last_login": null,
+		"is_superuser": false,
+		"username": "jay",
+		"first_name": "jay",
+		"last_name": "xu",
+		"email": "jay.xu@emc.com",
+		"is_staff": true,
+		"is_active": true,
+		"date_joined": "2016-12-27T16:35:12Z",
+		"groups": [],
+		"user_permissions": []
+	}
+},
+{
+	"model": "auth.user",
+	"pk": 2,
+	"fields": {
+		"password": "pbkdf2_sha256$30000$pOSVLwedonJ9$MMN/xHaf8QMOIoB71aW317IgX4df6dZ2uabfmhrSun4=",
+		"last_login": null,
+		"is_superuser": false,
+		"username": "peter",
+		"first_name": "peter",
+		"last_name": "wang",
+		"email": "peter.wang@emc.com",
+		"is_staff": false,
+		"is_active": true,
+		"date_joined": "2016-12-27T16:35:57Z",
+		"groups": [],
+		"user_permissions": []
+	}
+}]

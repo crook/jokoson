@@ -4,5 +4,5 @@ from jokoson.db import models
 
 admin.site.register(models.Equip)
 admin.site.register(models.Order)
-admin.site.register(models.Vendor)
-admin.site.register(models.Category)
+admin.site.register(models.Manufacture)
+admin.site.register(models.Model)

@@ -28,12 +28,12 @@ class AdminListUserTest(APITestCase):
     """
 
     def setUp(self):
-        john = TestData.user['john']
-        self.superuser = User.objects.create_superuser(**john)
-        self.client.login(**john)
+        td_john = TestData.user['john']
+        self.superuser = User.objects.create_superuser(**td_john)
+        self.client.login(**td_john)
 
-        mike = TestData.user['mike']
-        self.mike = User.objects.create(**mike)
+        td_mike = TestData.user['mike']
+        self.mike = User.objects.create(**td_mike)
 
     def test_list_user_with_admin_login(self):
         response = self.client.get(reverse('user-list'))
@@ -41,22 +41,22 @@ class AdminListUserTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 
     def test_get_user_detail_with_admin_login(self):
-        mike = TestData.user['mike']
+        td_mike = TestData.user['mike']
         response = self.client.get(reverse('user-detail', args=[self.mike.id]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        for key in mike:
+        for key in td_mike:
             if key != 'password':
-                self.assertEqual(response.data[key], mike[key])
+                self.assertEqual(response.data[key], td_mike[key])
 
     def test_list_user_with_name_filter(self):
-        mike = TestData.user['mike']
-        user = {'username': mike['username']}
+        td_mike = TestData.user['mike']
+        user = {'username': td_mike['username']}
         response = self.client.get(reverse('user-list'), user)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         for key in TestData.user['mike']:
             if key != 'password':
-                self.assertEqual(response.data[0][key], mike[key])
+                self.assertEqual(response.data[0][key], td_mike[key])
 
 
 class AdminUpdateUserTest(APITestCase):
@@ -65,13 +65,13 @@ class AdminUpdateUserTest(APITestCase):
     """
 
     def setUp(self):
-        john = TestData.user['john']
-        self.superuser = User.objects.create_superuser(**john)
-        self.client.login(**john)
+        td_john = TestData.user['john']
+        self.superuser = User.objects.create_superuser(**td_john)
+        self.client.login(**td_john)
 
-        mike = TestData.user['mike']
+        td_mike = TestData.user['mike']
         self.mike = serializers.TenantSerializer(
-            User.objects.create(**mike)).data
+            User.objects.create(**td_mike)).data
         self.mike.update({'first_name': 'Changed'}, )
 
     def test_update_user_with_admin_login(self):
@@ -87,12 +87,12 @@ class AdminDeleteUserTest(APITestCase):
     """
 
     def setUp(self):
-        john = TestData.user['john']
-        self.superuser = User.objects.create_superuser(**john)
-        self.client.login(**john)
+        td_john = TestData.user['john']
+        self.superuser = User.objects.create_superuser(**td_john)
+        self.client.login(**td_john)
 
-        mike = TestData.user['mike']
-        self.mike = User.objects.create(**mike)
+        td_mike = TestData.user['mike']
+        self.mike = User.objects.create(**td_mike)
 
     def test_delete_user_with_admin_login(self):
         response = self.client.delete(
@@ -120,9 +120,9 @@ class AdminLogoutTest(APITestCase):
     """
 
     def setUp(self):
-        john = TestData.user['john']
-        self.superuser = User.objects.create_superuser(**john)
-        self.client.login(**john)
+        td_john = TestData.user['john']
+        self.superuser = User.objects.create_superuser(**td_john)
+        self.client.login(**td_john)
 
     def test_admin_logout(self):
         self.client.logout()
@@ -194,8 +194,8 @@ class UserListUserTest(APITestCase):
                 self.assertEqual(response.data[0][key], self.mike[key])
 
     def test_list_user_with_other_name_filter(self):
-        john = TestData.user['john']
-        user = {'username': john['username']}
+        td_john = TestData.user['john']
+        user = {'username': td_john['username']}
         response = self.client.get(reverse('user-list'), user)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response.data)
@@ -226,14 +226,14 @@ class UserUpdateUserTest(APITestCase):
     """
 
     def setUp(self):
-        mike = TestData.user['mike']
+        td_mike = TestData.user['mike']
 
-        self.client.post(reverse('user-list'), mike)
+        self.client.post(reverse('user-list'), td_mike)
 
-        self.client.login(**mike)
+        self.client.login(**td_mike)
 
         self.mike = serializers.TenantSerializer(
-            User.objects.get(username=mike['username'])).data
+            User.objects.get(username=td_mike['username'])).data
         self.mike.update({'first_name': 'Changed'}, )
 
     def test_can_update_user(self):
@@ -267,8 +267,8 @@ class UserDeleteUserTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_another_user(self):
-        john = TestData.user['john']
-        user = User.objects.get(username=john['username'])
+        td_john = TestData.user['john']
+        user = User.objects.get(username=td_john['username'])
         response = self.client.delete(
             reverse('user-detail', args=[user.id]))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

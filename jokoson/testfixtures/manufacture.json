@@ -1,0 +1,22 @@
+[{
+	"model": "db.manufacture",
+	"pk": 1,
+	"fields": {
+		"name": "Hako",
+		"city": "Bad Oldesloe",
+		"cell_phone": "",
+		"office_phone": "0049-4531-806-0",
+		"address": "Hako Holding GmbH & Co KG Hamburger Stra\u00dfe 209-239"
+	}
+},
+{
+	"model": "db.manufacture",
+	"pk": 2,
+	"fields": {
+		"name": "Haulotte",
+		"city": "Virginia",
+		"cell_phone": "",
+		"office_phone": "(001)757-689-2146",
+		"address": "3409 Chandler Creek Rd. Virginia Beach VA 23453 United States"
+	}
+}]

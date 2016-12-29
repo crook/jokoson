@@ -17,10 +17,10 @@ from jokoson.db import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'order', views.OrderViewSet, base_name='order')
-router.register(r'equip', views.EquipViewSet)
-router.register(r'vendor', views.VendorViewSet)
-router.register(r'category', views.CategoryViewSet, base_name='category')
-router.register(r'tenant', views.TenantViewSet, base_name='user')
+router.register(r'api/order', views.OrderViewSet, base_name='order')
+router.register(r'api/equip', views.EquipViewSet)
+router.register(r'api/manufacture', views.ManufactureViewSet)
+router.register(r'api/model', views.ModelViewSet, base_name='model')
+router.register(r'api/tenant', views.TenantViewSet, base_name='user')
 
 urlpatterns = router.urls

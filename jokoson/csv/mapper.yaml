@@ -1,0 +1,13 @@
+CVS_Mapper:
+  - obj_name: Manufacture
+    properties:
+      - name: manufacture
+      - city: city
+      - cell_phone: "cell phone"
+      - office_phone: "office phone"
+      - address: address
+  - obj_name: Model
+    properties:
+      - name: model
+      - description: "model description"
+      - manufacture: manufacture

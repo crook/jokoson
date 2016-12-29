@@ -63,7 +63,9 @@ class EquipFilter(object):
             if request.user.is_staff:
                 self.qs = queryset
             else:
-                self.qs = queryset.filter(health='OK')
+                # Only query the equipments on which health is `OK` and
+                # status is `0`(available to sell or rent)
+                self.qs = queryset.filter(health='OK', status=0)
 
 
 class OrderFilter(object):

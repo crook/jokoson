@@ -1,11 +1,15 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
-from rest_framework import permissions
 from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework import mixins
+
 from jokoson.db import models
 from jokoson.db import serializers
 from jokoson.db import filters as jksn_filters
 from jokoson.db import permissions as jksn_permissions
+from jokoson.csv.csvhandler import CSVHandler
 
 
 class TenantViewSet(viewsets.ModelViewSet):
@@ -14,7 +18,10 @@ class TenantViewSet(viewsets.ModelViewSet):
     filter_class = jksn_filters.TenantFilter
 
     def get_queryset(self):
-        return User.objects.all()
+        return get_user_model().objects.all()
+
+    def pre_save(self, obj):
+        pass
 
 
 class ManufactureViewSet(viewsets.ModelViewSet):
@@ -73,7 +80,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.OrderSerializer
     permission_classes = (jksn_permissions.OrderPermission,)
     filter_class = jksn_filters.OrderFilter
-    filter_fields = ('tenant', 'total_cost', 'equip_manufacture', 'equip_category')
+    filter_fields = (
+        'tenant', 'total_cost', 'equip_manufacture', 'equip_category')
 
     def perform_create(self, serializer):
         equip = models.Equip.objects.get(
@@ -87,3 +95,25 @@ class OrderViewSet(viewsets.ModelViewSet):
                 username=serializer.initial_data['tenant'])
 
         serializer.save(equip=equip, tenant=tenant)
+
+
+class CSVViewSet(mixins.CreateModelMixin,
+                 viewsets.GenericViewSet):
+    ViewSetMap = {
+        'Manufacture': ManufactureViewSet(),
+        'Order': OrderViewSet(),
+        'Equip': EquipViewSet(),
+        'Model': ModelViewSet(),
+    }
+    permission_classes = (permissions.IsAdminUser,)
+
+    def create(self, request, *args, **kwargs):
+        handler = CSVHandler(self, request.data['datafile'])
+        handler.csv_import()
+        return Response(status=status.HTTP_201_CREATED)
+
+    def list(self, request, *args, **kwargs):
+        pass
+
+    def get_viewset(self, name):
+        return self.ViewSetMap[name]

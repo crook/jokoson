@@ -24,8 +24,7 @@ SECRET_KEY = '0ly((tu4&64qslzvl4$!6)ourzmn=5882cab@6_9rm9%v(-ayj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.32.253.126']
-# ALLOWED_HOSTS = ['192.168.0.104']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -38,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'jokoson.db',
-    'jokoson.file',
 ]
 
 MIDDLEWARE = [

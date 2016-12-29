@@ -1,11 +1,9 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 from jokoson.db import urls as db_urls
-from jokoson.file import urls as file_urls
 
 urlpatterns = []
 urlpatterns += db_urls.urlpatterns
-urlpatterns += file_urls.urlpatterns
 
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',

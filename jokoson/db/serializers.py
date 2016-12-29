@@ -38,6 +38,9 @@ class TenantSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    def instance_query(self):
+        pass
+
 
 class ManufactureSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,9 +54,17 @@ class ManufactureSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    def instance_query(self):
+        try:
+            if not self.instance:
+                self.instance = models.Manufacture.objects.get(
+                    name=self.initial_data['name'])
+        except self.Meta.model.DoesNotExist as ex:
+            pass
+
+
 
 class ModelSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Model
         fields = '__all__'
@@ -64,6 +75,9 @@ class ModelSerializer(serializers.ModelSerializer):
         Validation.check_missing_property('model', props, attrs)
 
         return attrs
+
+    def instance_query(self):
+        pass
 
 
 class EquipSerializer(serializers.ModelSerializer):
@@ -91,6 +105,9 @@ class EquipSerializer(serializers.ModelSerializer):
 
         super(EquipSerializer, self).is_valid(raise_exception)
 
+    def instance_query(self):
+        pass
+
 
 class OrderSerializer(serializers.ModelSerializer):
     tenant = serializers.HyperlinkedRelatedField(many=False,
@@ -107,3 +124,6 @@ class OrderSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "The end time of the order must be after the start time.")
         return data
+
+    def instance_query(self):
+        pass

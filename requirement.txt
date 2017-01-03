@@ -3,4 +3,5 @@ djangorestframework
 django-filter
 #djangorestframework-csv
 mysqlclient
-libmysqlclient-dev
+pyyaml
+#libmysqlclient-dev

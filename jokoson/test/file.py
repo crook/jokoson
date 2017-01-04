@@ -1,10 +1,7 @@
-import copy
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from jokoson.db import serializers
-from jokoson.db import models
 from jokoson.test.data import TestData
 
 
@@ -15,8 +12,11 @@ class FileUploadTests(APITestCase):
 
     def test_upload_file(self):
         td_john = TestData.user['john']
-        self.superuser = User.objects.create_superuser(**td_john)
+        User.objects.create_superuser(**td_john)
         self.client.login(**td_john)
+
+        mike = TestData.user['mike']
+        self.client.post(reverse('user-list'), mike)
 
         data = self.upload_file('/home/stack/jokoson/jokoson/csv/summary.csv')
 

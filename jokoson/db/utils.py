@@ -2,7 +2,8 @@ from rest_framework.serializers import ValidationError
 
 
 class Validation(object):
-    MESSAGE = 'The %(type)s\'s property %(prop)s should not be empty. The @(typs)s: %(tenant)s',
+    MESSAGE = ('The %(type)s\'s property %(prop)s should not be empty. '
+               'The @(typs)s: %(tenant)s')
 
     @staticmethod
     def check_missing_property(type, props, attrs):

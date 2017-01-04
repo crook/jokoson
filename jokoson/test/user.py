@@ -237,8 +237,9 @@ class UserUpdateUserTest(APITestCase):
         self.mike.update({'first_name': 'Changed'}, )
 
     def test_can_update_user(self):
-        response = self.client.put(
-           reverse('user-detail', args=[self.mike['id']]), self.mike)
+        response = self.client.put(reverse('user-detail',
+                                           args=[self.mike['id']]),
+                                   self.mike)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['first_name'], self.mike['first_name'])
 

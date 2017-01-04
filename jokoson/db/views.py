@@ -85,7 +85,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         equip = models.Equip.objects.get(
-            sn=serializer.initial_data['equip_sn'])
+            sn=serializer.initial_data['equip'])
 
         try:
             tenant = get_user_model().objects.get(

@@ -1,7 +1,6 @@
-import copy
+from datetime import datetime
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.serializers import ValidationError
 from jokoson.db import models
 from jokoson.db.utils import Validation
 
@@ -29,17 +28,18 @@ class TenantSerializer(serializers.ModelSerializer):
             if v == 'None':
                 self.initial_data[k] = None
 
+        props = ('username', 'first_name', 'last_name', 'password', 'email')
+        Validation.check_missing_property('tenant', props, self.initial_data)
+
         super(TenantSerializer, self).is_valid(raise_exception)
 
-    def validate(self, attrs):
-        # Check the mandatory fields for tenant model.
-        props = ('username', 'first_name', 'last_name', 'password', 'email')
-        Validation.check_missing_property('tenant', props, attrs)
-
-        return attrs
-
     def instance_query(self):
-        pass
+        try:
+            if not self.instance:
+                self.instance = get_user_model().objects.get(
+                    username=self.initial_data['tenant'])
+        except self.Meta.model.DoesNotExist:
+            pass
 
 
 class ManufactureSerializer(serializers.ModelSerializer):
@@ -48,20 +48,24 @@ class ManufactureSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-    def validate(self, attrs):
-        props = ('name', 'city', 'office_phone', 'address')
-        Validation.check_missing_property('manufacture', props, attrs)
+    def is_valid(self, raise_exception=False):
+        for k, v in self.initial_data.items():
+            if v == 'None':
+                self.initial_data[k] = None
 
-        return attrs
+        props = ('name', 'city', 'office_phone', 'address')
+        Validation.check_missing_property('manufacture', props,
+                                          self.initial_data)
+
+        super(ManufactureSerializer, self).is_valid(raise_exception)
 
     def instance_query(self):
         try:
             if not self.instance:
                 self.instance = models.Manufacture.objects.get(
                     name=self.initial_data['name'])
-        except self.Meta.model.DoesNotExist as ex:
+        except self.Meta.model.DoesNotExist:
             pass
-
 
 
 class ModelSerializer(serializers.ModelSerializer):
@@ -70,43 +74,54 @@ class ModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-    def validate(self, attrs):
-        props = ('name',)
-        Validation.check_missing_property('model', props, attrs)
+    def is_valid(self, raise_exception=False):
+        for k, v in self.initial_data.items():
+            if v == 'None':
+                self.initial_data[k] = None
 
-        return attrs
+        props = ('name',)
+        Validation.check_missing_property('model', props, self.initial_data)
+
+        super(ModelSerializer, self).is_valid(raise_exception)
 
     def instance_query(self):
-        pass
+        try:
+            if not self.instance:
+                self.instance = models.Model.objects.get(
+                    name=self.initial_data['name'])
+        except self.Meta.model.DoesNotExist:
+            pass
 
 
 class EquipSerializer(serializers.ModelSerializer):
-    # model = serializers.HyperlinkedRelatedField(
-    #     many=False, view_name='model-detail', read_only=True)
-    #
-    # manufacture = serializers.HyperlinkedRelatedField(
-    #     many=False, view_name='manufacture-detail', read_only=True)
+    model = serializers.HyperlinkedRelatedField(
+        many=False, view_name='model-detail', read_only=True)
+
+    manufacture = serializers.HyperlinkedRelatedField(
+        many=False, view_name='manufacture-detail', read_only=True)
 
     class Meta:
         model = models.Equip
         fields = '__all__'
         depth = 1
 
-    def validate(self, attrs):
-        props = ('sn', 'health')
-        Validation.check_missing_property('equip', props, attrs)
-
-        return attrs
-
     def is_valid(self, raise_exception=False):
         for k, v in self.initial_data.items():
-            if v == 'None':
+            if v in ['None', '']:
                 self.initial_data[k] = None
+
+        props = ('sn', 'health')
+        Validation.check_missing_property('equip', props, self.initial_data)
 
         super(EquipSerializer, self).is_valid(raise_exception)
 
     def instance_query(self):
-        pass
+        try:
+            if not self.instance:
+                self.instance = models.Equip.objects.get(
+                    sn=self.initial_data['sn'])
+        except self.Meta.model.DoesNotExist:
+            pass
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -119,11 +134,33 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-    def validate(self, data):
-        if data['starttime'] > data['endtime']:
+    def instance_query(self):
+        try:
+            if not self.instance:
+                self.instance = models.Order.objects.get(
+                    tenant__username=self.initial_data['tenant'],
+                    equip__sn=self.initial_data['equip'])
+        except self.Meta.model.DoesNotExist:
+            pass
+
+    def is_valid(self, raise_exception=False):
+        for k, v in self.initial_data.items():
+            if v == 'None':
+                self.initial_data[k] = None
+
+        props = ('total_cost', 'starttime', 'endtime')
+        Validation.check_missing_property('order', props, self.initial_data)
+
+        if self.initial_data['starttime'] > self.initial_data['endtime']:
             raise serializers.ValidationError(
                 "The end time of the order must be after the start time.")
-        return data
 
-    def instance_query(self):
-        pass
+        if ('duration' not in self.initial_data or
+                not self.initial_data['duration']):
+            t_start = datetime.strptime(self.initial_data['starttime'],
+                                        "%Y-%m-%dT%H:%M:%S")
+            t_end = datetime.strptime(self.initial_data['endtime'],
+                                      "%Y-%m-%dT%H:%M:%S")
+            self.initial_data['duration'] = t_end - t_start
+
+        super(OrderSerializer, self).is_valid(raise_exception)

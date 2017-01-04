@@ -62,7 +62,7 @@ class TestData(object):
             'description': 'This is ME 112104!',
             'manufacture': manufacture['Haulotte']['name'],
             'model': model['star-10']['name'],
-            'status': 1,
+            'status': 0,
             'health': 'OK',
             'gps_status': 1,
             'gps_model': 'gps_model-1',
@@ -77,7 +77,7 @@ class TestData(object):
             'description': 'This is ME 111501!',
             'manufacture': manufacture['Haulotte']['name'],
             'model': model['star-10']['name'],
-            'status': 1,
+            'status': 0,
             'health': 'BAD',
             'gps_status': None,
             'gps_model': None,
@@ -91,7 +91,7 @@ class TestData(object):
     orders = {
         'ME 112104': {
             'tenant': None,
-            'equip_sn': equip['ME 112104']['sn'],
+            'equip': equip['ME 112104']['sn'],
             'starttime': '2017-10-30T12:38:57Z',
             'endtime': '2018-10-30T12:38:57Z',
             'total_cost': 9000.00,
@@ -101,7 +101,7 @@ class TestData(object):
         },
         'ME 111501': {
             'tenant': None,
-            'equip_sn': equip['ME 111501']['sn'],
+            'equip': equip['ME 111501']['sn'],
             'starttime': '2017-10-30T12:38:57Z',
             'endtime': '2018-10-30T12:38:57Z',
             'total_cost': 10000.00,
@@ -109,4 +109,3 @@ class TestData(object):
             'duration': '365 00:00:00',
         },
     }
-

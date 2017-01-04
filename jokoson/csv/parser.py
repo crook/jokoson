@@ -1,4 +1,7 @@
 import inspect
+import pprint
+from datetime import datetime
+
 import os
 import yaml
 
@@ -11,7 +14,7 @@ class MapperParser(object):
     def _get_directory(cls):
         return os.path.dirname(inspect.getfile(cls))
 
-    def _read(self):
+    def read(self):
         filename = os.path.realpath(
             os.path.join(self._get_directory(), self.file_name))
         with open(filename, 'r') as stream:
@@ -20,18 +23,24 @@ class MapperParser(object):
         return ret
 
     def get_mapper(self):
-        mapper = self._read()
-        obj_list = []
-        for item in mapper['CVS_Mapper']:
+        mapper = self.read()
+        mapper.sort(key=lambda model: model['order'])
+        ordered_model = []
+        for item in mapper:
             prop = dict()
-            for properties in item['properties']:
-                for key, value in properties.items():
-                    prop[key] = value
-            obj_list.append({item['obj_name']: prop})
+            for props in item['properties']:
+                for key, value in props.items():
+                    prop[value] = key
+            ordered_model.append({item['name']: prop})
 
-        return obj_list
+        return ordered_model
 
 
 if __name__ == "__main__":
     parser = MapperParser('mapper.yaml')
-    print(parser.get_mapper())
+    pprint.pprint(parser.get_mapper())
+
+    t_start = datetime('2017-12-29T00:04:07')
+    t_end = datetime('2018-12-29T00:04:07')
+    duration = datetime.utcfromtimestamp(t_end - t_start)
+    print(duration)

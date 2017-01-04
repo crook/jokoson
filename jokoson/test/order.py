@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from jokoson.db import models
 from jokoson.test.data import TestData
 
 
@@ -133,7 +132,7 @@ class AdminListOrderTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_list_order_with_name_filter_with_admin_login(self):
-        order_query = {'equip_sn': TestData.orders['ME 112104']['equip_sn']}
+        order_query = {'equip_sn': TestData.orders['ME 112104']['equip']}
         response = self.client.get(reverse('order-list'), order_query)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
@@ -172,7 +171,7 @@ class AdminUpdateOrderTest(APITestCase):
         self.client.post(reverse('order-list'), self.order)
 
     def test_update_order_with_admin_login(self):
-        order_query = {'equip_sn': self.order['equip_sn']}
+        order_query = {'equip_sn': self.order['equip']}
         response = self.client.get(reverse('order-list'), order_query)
         order = response.data[0]
         self.order.update({'total_cost': 10000})
@@ -448,7 +447,7 @@ class UserListOrderTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_list_order_with_name_filter(self):
-        order_query = {'equip_sn': TestData.orders['ME 111501']['equip_sn']}
+        order_query = {'equip_sn': TestData.orders['ME 111501']['equip']}
         response = self.client.get(reverse('order-list'), order_query)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)

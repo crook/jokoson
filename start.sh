@@ -28,3 +28,4 @@ source $ROOT_DIR/$PROJECT/.env/bin/activate
 
 pip install django
 
+pip install -r requirement.txt

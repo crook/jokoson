@@ -22,6 +22,5 @@ router.register(r'api/equip', views.EquipViewSet)
 router.register(r'api/manufacture', views.ManufactureViewSet)
 router.register(r'api/model', views.ModelViewSet, base_name='model')
 router.register(r'api/tenant', views.TenantViewSet, base_name='user')
-router.register(r'api/csv', views.CSVViewSet, base_name='csv')
 
 urlpatterns = router.urls

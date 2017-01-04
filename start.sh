@@ -9,12 +9,12 @@ echo "mysql-server mysql-server/root_password password $mysql_password" | sudo d
 echo "mysql-server mysql-server/root_password_again password $mysql_password" | sudo debconf-set-selections
 
 sudo apt-get -y install mysql-server
+sudo apt-get -y install libmysqlclient-dev
 
 mysql -uroot -p$mysql_password -e "create database if not exists $mysql_db;"
 
 #sudo apt-get update
 sudo apt-get -y install python3-pip
-sudo apt-get -y installlibmysqlclient-dev
 
 sudo pip3 install virtualenv
 

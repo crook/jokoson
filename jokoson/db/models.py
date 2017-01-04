@@ -10,7 +10,7 @@ from django.db import models
 class Manufacture(models.Model):
     name = models.CharField(max_length=64, unique=True)
     city = models.CharField(max_length=64)
-    cell_phone = models.CharField(max_length=64, blank=True)
+    cell_phone = models.CharField(max_length=64, null=True, blank=True)
     office_phone = models.CharField(max_length=64)
     address = models.CharField(max_length=1024)
 

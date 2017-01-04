@@ -25,7 +25,7 @@ class TenantSerializer(serializers.ModelSerializer):
 
     def is_valid(self, raise_exception=False):
         for k, v in self.initial_data.items():
-            if v == 'None':
+            if v in ['None', '']:
                 self.initial_data[k] = None
 
         props = ('username', 'first_name', 'last_name', 'password', 'email')
@@ -50,7 +50,7 @@ class ManufactureSerializer(serializers.ModelSerializer):
 
     def is_valid(self, raise_exception=False):
         for k, v in self.initial_data.items():
-            if v == 'None':
+            if v in ['None', '']:
                 self.initial_data[k] = None
 
         props = ('name', 'city', 'office_phone', 'address')
@@ -76,7 +76,7 @@ class ModelSerializer(serializers.ModelSerializer):
 
     def is_valid(self, raise_exception=False):
         for k, v in self.initial_data.items():
-            if v == 'None':
+            if v in ['None', '']:
                 self.initial_data[k] = None
 
         props = ('name',)
@@ -145,7 +145,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def is_valid(self, raise_exception=False):
         for k, v in self.initial_data.items():
-            if v == 'None':
+            if v in ['None', '']:
                 self.initial_data[k] = None
 
         props = ('total_cost', 'starttime', 'endtime')

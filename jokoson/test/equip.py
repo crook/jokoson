@@ -127,8 +127,7 @@ class AdminListAllEquipTest(APITestCase):
         self.client.post(reverse('equip-list'), td_equip)
 
         td_equip = TestData.equip['ME 111501']
-        response = self.client.post(reverse('equip-list'), td_equip)
-        print(response)
+        self.client.post(reverse('equip-list'), td_equip)
 
     def test_list_all_equip_with_admin_login(self):
         response = self.client.get(reverse('equip-list'))

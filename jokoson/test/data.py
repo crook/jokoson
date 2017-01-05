@@ -92,8 +92,8 @@ class TestData(object):
         'ME 112104': {
             'tenant': None,
             'equip': equip['ME 112104']['sn'],
-            'starttime': '2017-10-30T12:38:57Z',
-            'endtime': '2018-10-30T12:38:57Z',
+            'starttime': '2017-10-30T12:38:57',
+            'endtime': '2018-10-30T12:38:57',
             'total_cost': 9000.00,
             'valid': True,
             'duration': '365 00:00:00',
@@ -102,8 +102,8 @@ class TestData(object):
         'ME 111501': {
             'tenant': None,
             'equip': equip['ME 111501']['sn'],
-            'starttime': '2017-10-30T12:38:57Z',
-            'endtime': '2018-10-30T12:38:57Z',
+            'starttime': '2017-10-30T12:38:57',
+            'endtime': '2018-10-30T12:38:57',
             'total_cost': 10000.00,
             'valid': True,
             'duration': '365 00:00:00',

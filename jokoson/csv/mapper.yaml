@@ -1,41 +1,69 @@
-- name: Manufacture
-  order: 1
-  properties:
-    - name: "Manufacture"
-    - city: "City"
-    - cell_phone: "Cell Phone"
-    - office_phone: "Office Phone"
-    - address: "Address"
-- name: Model
-  order: 2
-  properties:
-    - name: "Model"
-    - description: "Model Description"
-    - manufacture: "Manufacture"
-- name: Equip
-  order: 3
-  properties:
-    - sn: "Serial Number"
-    - description: "Equipment Description"
-    - model: "Model"
-    - manufacture: "Manufacture"
-    - status: "Equipment Status"
-    - health: "Equipment Health"
-    - gps_status: "GPS Status"
-    - gps_model: "GPS Model"
-    - gps_batterypercent: "GPS Batery Percent(%)"
-    - gps_time: "GPS Time"
-    - x: "Longitude"
-    - y: "Latitude"
-    - z: "Altitude"
-- name: Order
-  order: 4
-  properties:
-    - tenant: "Tenant"
-    - equip: "Serial Number"
-    - signtime: "Production Date"
-    - starttime: "Start Time"
-    - endtime: "End Time"
-    - duration: "Druation"
-    - total_cost: "Cost"
-    - valid: "Valid Order"
+import:
+  - name: Manufacture
+    order: 1
+    properties:
+      - name: "Manufacture"
+      - city: "City"
+      - cell_phone: "Cell Phone"
+      - office_phone: "Office Phone"
+      - address: "Address"
+  - name: Model
+    order: 2
+    properties:
+      - name: "Model"
+      - description: "Model Description"
+      - manufacture: "Manufacture"
+  - name: Equip
+    order: 3
+    properties:
+      - sn: "Serial Number"
+      - description: "Equipment Description"
+      - model: "Model"
+      - manufacture: "Manufacture"
+      - status: "Equipment Status"
+      - health: "Equipment Health"
+      - gps_status: "GPS Status"
+      - gps_model: "GPS Model"
+      - gps_batterypercent: "GPS Batery Percent(%)"
+      - gps_time: "GPS Time"
+      - x: "Longitude"
+      - y: "Latitude"
+      - z: "Altitude"
+  - name: Order
+    order: 4
+    properties:
+      - tenant: "Tenant"
+      - equip: "Serial Number"
+      - signtime: "Production Date"
+      - starttime: "Start Time"
+      - endtime: "End Time"
+      - duration: "Druation"
+      - total_cost: "Cost"
+      - valid: "Valid Order"
+
+export:
+  - Manufacture
+  - City
+  - Cell Phone
+  - Office Phone
+  - Address
+  - Model
+  - Model Description
+  - Serial Number
+  - Equipment Description
+  - Equipment Status
+  - Equipment Health
+  - GPS Status
+  - GPS Model
+  - GPS Batery Percent(%)
+  - GPS Time
+  - Longitude
+  - Latitude
+  - Altitude
+  - Tenant
+  - Production Date
+  - Start Time
+  - End Time
+  - Druation
+  - Cost
+  - Valid Order

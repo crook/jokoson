@@ -4,12 +4,12 @@ from jokoson.csv.parser import MapperParser
 
 
 class CSVHandler(object):
-    def __init__(self, viewset, fd):
+    def __init__(self, viewset, fd=None):
         self.viewset = viewset
         self.fd = fd
 
     def csv_import(self):
-        mapper = MapperParser('mapper.yaml').get_mapper()
+        mapper, table_header = MapperParser('mapper.yaml').get_mapper()
 
         with self.fd as stream:
             csvf = StringIO(stream.read().decode())
@@ -41,7 +41,22 @@ class CSVHandler(object):
         return property_dict
 
     def csv_export(self):
-        pass
+
+        mapper, table_header = MapperParser('mapper.yaml').get_mapper()
+        export_dict = {
+            'header': table_header,
+            'content': [],
+        }
+        mapper.reverse()
+        for model in mapper:
+            for model_name, prop_map in model.items():
+                viewset = self.viewset.get_viewset(model_name)
+                serializer = viewset.get_serializer_class()(viewset.queryset,
+                                                            many=True)
+                for data in serializer.data:
+                    serializer.child.export(data, mapper, export_dict)
+
+        return export_dict
 
     def download(self):
         pass

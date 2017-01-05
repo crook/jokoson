@@ -20,10 +20,10 @@ class MapperParser(object):
         with open(filename, 'r') as stream:
             ret = yaml.load(stream)
 
-        return ret
+        return ret['import'], ret['export']
 
     def get_mapper(self):
-        mapper = self.read()
+        mapper, table_header = self.read()
         mapper.sort(key=lambda model: model['order'])
         ordered_model = []
         for item in mapper:
@@ -33,7 +33,7 @@ class MapperParser(object):
                     prop[value] = key
             ordered_model.append({item['name']: prop})
 
-        return ordered_model
+        return ordered_model, table_header
 
 
 if __name__ == "__main__":

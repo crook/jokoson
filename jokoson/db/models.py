@@ -31,10 +31,9 @@ class Model(models.Model):
 #    description - the description of the equipment
 #    model - the model name of the equipment and refer to model `Model`
 #    manufacture - the manufacture of the model
-#    status - the status of the equipment, for example, sell, rent or available
-#         0: available to sell or rent
+#    status - the status of the equipment, for example, rent or available
+#         0: available to rent
 #         1: rent
-#         2: sell
 #    health - health of the equipment, for example, ok, broken or having issue
 #    gps_status - GPS status which is on the equipment. It may be empty.
 #    gps_model  - GPS model which is on the equipment. It may be empty.

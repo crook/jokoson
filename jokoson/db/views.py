@@ -72,7 +72,7 @@ class EquipViewSet(viewsets.ModelViewSet):
             model = models.Model.objects.get(
                 name=serializer.initial_data['model'])
 
-        serializer.save(manufacture=manufacture, model=model)
+        serializer.save(manufacture=manufacture, model=model, status=0)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -87,6 +87,17 @@ class OrderViewSet(viewsets.ModelViewSet):
         equip = models.Equip.objects.get(
             sn=serializer.initial_data['equip'])
 
+        if equip.status != 0:
+            raise ValueError(
+                "Invalid equipment %(sn)s status (%(status)s) when "
+                "booking an order." % {
+                    'sn': equip.sn,
+                    'status': equip.status
+                }
+            )
+        equip.status = 1
+        equip.save(update_fields=['status'])
+
         try:
             tenant = get_user_model().objects.get(
                 id=serializer.initial_data['tenant'])
@@ -95,6 +106,17 @@ class OrderViewSet(viewsets.ModelViewSet):
                 username=serializer.initial_data['tenant'])
 
         serializer.save(equip=equip, tenant=tenant)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Update the equipment status to 0, which indicates that the equipment
+        # is ready for re-rent or sale
+        equip = instance.equip
+        equip.status = 0
+        equip.save(update_fields=['status'])
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CSVViewSet(mixins.CreateModelMixin,
@@ -113,7 +135,9 @@ class CSVViewSet(mixins.CreateModelMixin,
         return Response(status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
-        pass
+        handler = CSVHandler(self)
+        data = handler.csv_export()
+        return Response(data)
 
     def get_viewset(self, name):
         return self.ViewSetMap[name]

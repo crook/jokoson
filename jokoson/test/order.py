@@ -35,6 +35,7 @@ class AdminCreateOrderTest(APITestCase):
         order['tenant'] = TestData.user['john']['username']
         response = self.client.post(reverse('order-list'), order)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['equip']['status'], 1)
 
     def test_create_other_tenant_order_with_admin_login(self):
         mike = TestData.user['mike']

@@ -1,0 +1,26 @@
+version: '2'
+services:
+    jokoson-db:
+        image: mysql
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_DATABASE=jokoson
+            - MYSQL_ROOT_PASSWORD=welcome
+        volumes:
+            - ./datadir:/var/lib/mysql
+
+    jokoson-rest:
+        restart: always
+        build: ../
+        image: jokoson
+        environment:
+            PYTHONIOENCODING: utf-8
+        ports:
+            - "8888:8888"
+        links:
+            - jokoson-db:db
+        volumes:
+            - ../:/code
+            - ./mysql.conf:/code/mysql.conf
+        entrypoint: /code/dev/entrypoint.sh

@@ -1,0 +1,146 @@
+[{
+	"model": "db.manufacture",
+	"pk": 1,
+	"fields": {
+		"name": "Hako",
+		"city": "Bad Oldesloe",
+		"cell_phone": "",
+		"office_phone": "0049-4531-806-0",
+		"address": "Hako Holding GmbH & Co KG Hamburger Stra\u00dfe 209-239"
+	}
+},
+{
+	"model": "db.manufacture",
+	"pk": 2,
+	"fields": {
+		"name": "Haulotte",
+		"city": "Virginia",
+		"cell_phone": "",
+		"office_phone": "(001)757-689-2146",
+		"address": "3409 Chandler Creek Rd. Virginia Beach VA 23453 United States"
+	}
+},
+{
+	"model": "db.model",
+	"pk": 1,
+	"fields": {
+		"name": "star 10",
+		"description": "star 10",
+		"manufacture": 2
+	}
+},
+{
+	"model": "db.model",
+	"pk": 2,
+	"fields": {
+		"name": "star 8",
+		"description": "star 8",
+		"manufacture": 2
+	}
+},
+{
+	"model": "db.equip",
+	"pk": 1,
+	"fields": {
+		"created_date": "2016-12-28T23:53:42Z",
+		"updated_date": "2016-12-28T23:53:42Z",
+		"sn": "ME 111501",
+		"description": "This is ME 111501!",
+		"model": 1,
+		"manufacture": 2,
+		"status": 1,
+		"health": "OK",
+		"gps_status": 1,
+		"gps_model": "gps_model-1",
+		"gps_batterypercent": 60,
+		"gps_time": "2016-10-30T12:38:57Z",
+		"x": 60.0,
+		"y": 70.0,
+		"z": 80.0
+	}
+},
+{
+	"model": "db.equip",
+	"pk": 2,
+	"fields": {
+		"created_date": "2016-12-28T23:55:52Z",
+		"updated_date": "2016-12-28T23:55:52Z",
+		"sn": "ME 112104",
+		"description": "This is ME 112104!",
+		"model": 1,
+		"manufacture": 2,
+		"status": 1,
+		"health": "BAD",
+		"gps_status": null,
+		"gps_model": "",
+		"gps_batterypercent": null,
+		"gps_time": null,
+		"x": null,
+		"y": null,
+		"z": null
+	}
+},
+{
+	"model": "auth.user",
+	"pk": 1,
+	"fields": {
+		"password": "pbkdf2_sha256$30000$XWBZudLQxVYu$HO0dxSQbBWq8H60sr+ZtleQZ4dLDxoD6CaRaRVEP9GY=",
+		"last_login": "2016-12-28T23:56:26Z",
+		"is_superuser": false,
+		"username": "jay",
+		"first_name": "jay",
+		"last_name": "xu",
+		"email": "jay.xu@emc.com",
+		"is_staff": true,
+		"is_active": true,
+		"date_joined": "2016-12-27T16:35:12Z",
+		"groups": [],
+		"user_permissions": []
+	}
+},
+{
+	"model": "auth.user",
+	"pk": 2,
+	"fields": {
+		"password": "pbkdf2_sha256$30000$pOSVLwedonJ9$MMN/xHaf8QMOIoB71aW317IgX4df6dZ2uabfmhrSun4=",
+		"last_login": "2016-12-28T23:56:15Z",
+		"is_superuser": false,
+		"username": "peter",
+		"first_name": "peter",
+		"last_name": "wang",
+		"email": "peter.wang@emc.com",
+		"is_staff": false,
+		"is_active": true,
+		"date_joined": "2016-12-27T16:35:57Z",
+		"groups": [],
+		"user_permissions": []
+	}
+},
+{
+	"model": "db.order",
+	"pk": 1,
+	"fields": {
+		"tenant": 2,
+		"equip": 1,
+		"signtime": "2016-12-29T00:00:39Z",
+		"starttime": "2017-10-30T12:38:57Z",
+		"endtime": "2018-10-30T12:38:57Z",
+		"duration": "365 00:00:00",
+		"total_cost": 1000.0,
+		"valid": true
+	}
+},
+{
+	"model": "db.order",
+	"pk": 3,
+	"fields": {
+		"tenant": 1,
+		"equip": 2,
+		"signtime": "2016-12-29T00:04:07Z",
+		"starttime": "2019-10-30T12:38:57Z",
+		"endtime": "2020-10-30T12:38:57Z",
+		"duration": "365 00:00:00",
+		"total_cost": 1000.0,
+		"valid": true
+	}
+}]

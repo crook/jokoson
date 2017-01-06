@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from jokoson.test.data import TestData
 
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class CSVUploadTests(APITestCase):
     def upload_file(self, path):
@@ -19,7 +21,7 @@ class CSVUploadTests(APITestCase):
         self.client.post(reverse('user-list'), mike)
 
     def test_upload_file(self):
-        data = self.upload_file('/home/stack/jokoson/jokoson/csv/summary.csv')
+        data = self.upload_file(os.path.join(BASE_DIR, 'csv/summary.csv'))
         self.client.post(reverse('csv-list'), data, format='multipart')
 
         response = self.client.get(reverse('manufacture-list'))
@@ -52,7 +54,7 @@ class CSVDownloadTest(APITestCase):
         mike = TestData.user['mike']
         self.client.post(reverse('user-list'), mike)
 
-        data = self.upload_file('/home/stack/jokoson/jokoson/csv/summary.csv')
+        data = self.upload_file(os.path.join(BASE_DIR, 'csv/summary.csv'))
         self.client.post(reverse('csv-list'), data, format='multipart')
 
     def test_download_file(self):

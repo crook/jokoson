@@ -7,6 +7,8 @@
 
 # Want to enter this container? Try this:
 # docker exec -it dev_jokoson-db_1 bash
+# or:
+# docker-compose exec -it jokoson-db bash
 
 EXIST=`docker-compose ps -q`
 if [ "X" == "X${EXIST}" ]; then

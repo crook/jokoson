@@ -70,10 +70,10 @@ class EquipFilter(object):
 
 class OrderFilter(object):
     QueryParaMapping = {
-        'equip_sn': 'equip__sn',
-        'equip_model': 'equip__model',
-        'category': 'equip__category__name',
-        'manufacture': 'equip__manufacture__name',
+        'equips_sn': 'equips__sn',
+        'equips_model': 'equips__model',
+        'category': 'equips__category__name',
+        'manufacture': 'equips__manufacture__name',
     }
 
     class Meta:

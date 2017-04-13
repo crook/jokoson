@@ -1,0 +1,5 @@
+TODO list
+
+1. Support many to many for order, since one order can have more equip. [Done]
+2. Add more vaule for order.valid. i.e. processing, vaild, invalid, locked...
+3. Support to query order by timeframe

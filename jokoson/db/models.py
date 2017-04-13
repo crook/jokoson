@@ -77,7 +77,8 @@ class Order(models.Model):
         ordering = ('signtime',)
 
     tenant = models.ForeignKey('auth.User', related_name='orders')
-    equip = models.OneToOneField('Equip', related_name='orders')
+    # Support for multiple equips
+    equips = models.ManyToManyField('Equip', related_name='orders')
     # Default format is 'iso-8601',
     # Othwise set "input_fomrats=YYYY-MM-DDThh:mm:ss"
     signtime = models.DateTimeField(auto_now_add=True)

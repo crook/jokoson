@@ -7,13 +7,13 @@ from jokoson.db.utils import Validation
 
 class TenantSerializer(serializers.ModelSerializer):
     orders = serializers.HyperlinkedRelatedField(many=True,
-                                                 view_name='order-detail',
-                                                 read_only=True)
+                                                view_name='order-detail',
+                                                read_only=True)
 
     class Meta:
         model = get_user_model()
         fields = '__all__'
-        depth = 1
+        depth = 2
 
     def create(self, validated_data):
         user = super(TenantSerializer, self).create(validated_data)
@@ -24,10 +24,6 @@ class TenantSerializer(serializers.ModelSerializer):
         return user
 
     def is_valid(self, raise_exception=False):
-        for k, v in self.initial_data.items():
-            if v in ['None', '']:
-                self.initial_data[k] = None
-
         props = ('username', 'first_name', 'last_name', 'password', 'email')
         Validation.check_missing_property('tenant', props, self.initial_data)
 
@@ -52,10 +48,6 @@ class ManufactureSerializer(serializers.ModelSerializer):
         depth = 1
 
     def is_valid(self, raise_exception=False):
-        for k, v in self.initial_data.items():
-            if v in ['None', '']:
-                self.initial_data[k] = None
-
         props = ('name', 'city', 'office_phone', 'address')
         Validation.check_missing_property('manufacture', props,
                                           self.initial_data)
@@ -81,10 +73,6 @@ class ModelSerializer(serializers.ModelSerializer):
         depth = 1
 
     def is_valid(self, raise_exception=False):
-        for k, v in self.initial_data.items():
-            if v in ['None', '']:
-                self.initial_data[k] = None
-
         props = ('name',)
         Validation.check_missing_property('model', props, self.initial_data)
 
@@ -115,10 +103,6 @@ class EquipSerializer(serializers.ModelSerializer):
         depth = 2
 
     def is_valid(self, raise_exception=False):
-        for k, v in self.initial_data.items():
-            if v in ['None', '']:
-                self.initial_data[k] = None
-
         props = ('sn', 'health')
         Validation.check_missing_property('equip', props, self.initial_data)
 
@@ -177,9 +161,10 @@ class EquipSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    # tenant = serializers.HyperlinkedRelatedField(many=False,
-    #                                              view_name='user-detail',
-    #                                              read_only=True)
+    #tenant = serializers.HyperlinkedRelatedField(many=False,
+    #                                             view_name='user-detail',
+    #                                             read_only=True)
+    equips = EquipSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Order
@@ -196,10 +181,6 @@ class OrderSerializer(serializers.ModelSerializer):
             pass
 
     def is_valid(self, raise_exception=False):
-        for k, v in self.initial_data.items():
-            if v in ['None', '']:
-                self.initial_data[k] = None
-
         props = ('total_cost', 'starttime', 'endtime')
         Validation.check_missing_property('order', props, self.initial_data)
 

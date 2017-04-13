@@ -17,7 +17,6 @@ class TestData(object):
             'is_active': True,
         },
     }
-
     manufacture = {
         'Hako': {
             'name': 'Hako',
@@ -40,9 +39,7 @@ class TestData(object):
             "office_phone": "(001)757-689-2146",
             "address": "3409 Chandler Creek Rd. Virginia Beach VA 23453 United States"
         }
-
     }
-
     model = {
         'star-8': {
             'name': 'star-8',
@@ -55,7 +52,6 @@ class TestData(object):
             'manufacture': manufacture['Haulotte']['name'],
         },
     }
-
     equip = {
         'ME 112104': {
             'sn': 'ME 112104',
@@ -71,6 +67,21 @@ class TestData(object):
             'x': 60.12,
             "y": 120.86,
             "z": 120.86,
+        },
+        'ME 112108': {
+            'sn': 'ME 112108',
+            'description': 'This is ME 112108!',
+            'manufacture': manufacture['Haulotte']['name'],
+            'model': model['star-10']['name'],
+            'status': 0,
+            'health': 'OK',
+            'gps_status': 2,
+            'gps_model': 'gps_model-1',
+            'gps_batterypercent': 100,
+            'gps_time': '2017-10-30T12:38:57Z',
+            'x': 160.12,
+            "y": 220.86,
+            "z": 20.86,
         },
         'ME 111501': {
             'sn': 'ME 111501',
@@ -91,20 +102,28 @@ class TestData(object):
     orders = {
         'ME 112104': {
             'tenant': None,
-            'equip': equip['ME 112104']['sn'],
+            'equips': [equip['ME 112104']['sn']],
             'starttime': '2017-10-30T12:38:57',
             'endtime': '2018-10-30T12:38:57',
             'total_cost': 9000.00,
             'valid': True,
             'duration': '365 00:00:00',
-
         },
         'ME 111501': {
             'tenant': None,
-            'equip': equip['ME 111501']['sn'],
+            'equips': [equip['ME 111501']['sn']],
             'starttime': '2017-10-30T12:38:57',
             'endtime': '2018-10-30T12:38:57',
             'total_cost': 10000.00,
+            'valid': True,
+            'duration': '365 00:00:00',
+        },
+        'ME 112104-112108': {
+            'tenant': None,
+            'equips': [equip['ME 112104']['sn'], equip['ME 112108']['sn']],
+            'starttime': '2017-10-30T12:38:57',
+            'endtime': '2018-10-30T12:38:57',
+            'total_cost': 19000.00,
             'valid': True,
             'duration': '365 00:00:00',
         },

@@ -17,6 +17,7 @@ from jokoson.db import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
+router.root_view_name = 'api'
 router.register(r'api/order', views.OrderViewSet, base_name='order')
 router.register(r'api/equip', views.EquipViewSet)
 router.register(r'api/manufacture', views.ManufactureViewSet)

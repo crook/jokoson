@@ -8,7 +8,7 @@ services:
             - MYSQL_DATABASE=jokoson
             - MYSQL_ROOT_PASSWORD=welcome
         volumes:
-            - ./datadir:/var/lib/mysql
+            - /tmp/datadir:/var/lib/mysql
 
     jokoson-rest:
         restart: always

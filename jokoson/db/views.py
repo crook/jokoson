@@ -80,23 +80,28 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.OrderSerializer
     permission_classes = (jksn_permissions.OrderPermission,)
     filter_class = jksn_filters.OrderFilter
+    # Support query like '/api/order/?equips_manufacture=sn1,sn2'
     filter_fields = (
-        'tenant', 'total_cost', 'equip_manufacture', 'equip_category')
+        'tenant', 'total_cost', 'equips_manufacture', 'equips_category', 'equips_sn')
 
     def perform_create(self, serializer):
-        equip = models.Equip.objects.get(
-            sn=serializer.initial_data['equip'])
+        equips = []
+        # TODO: so far only suppory sn
+        for sn in serializer.initial_data.getlist('equips'):
+            equip = models.Equip.objects.get(sn=sn)
 
-        if equip.status != 0:
-            raise ValueError(
-                "Invalid equipment %(sn)s status (%(status)s) when "
-                "booking an order." % {
-                    'sn': equip.sn,
-                    'status': equip.status
-                }
-            )
-        equip.status = 1
-        equip.save(update_fields=['status'])
+            # TODO: add more equip stauts
+            if equip.status != 0:
+                raise ValueError(
+                    "Invalid equipment %(sn)s status (%(status)s) when "
+                    "booking an order." % {
+                        'sn': equip.sn,
+                        'status': equip.status
+                    }
+                )
+            equip.status = 1
+            equip.save(update_fields=['status'])
+            equips.append(equip)
 
         try:
             tenant = get_user_model().objects.get(
@@ -105,15 +110,15 @@ class OrderViewSet(viewsets.ModelViewSet):
             tenant = get_user_model().objects.get(
                 username=serializer.initial_data['tenant'])
 
-        serializer.save(equip=equip, tenant=tenant)
+        serializer.save(equips=equips, tenant=tenant)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         # Update the equipment status to 0, which indicates that the equipment
         # is ready for re-rent or sale
-        equip = instance.equip
-        equip.status = 0
-        equip.save(update_fields=['status'])
+        for equip in instance.equips.all():
+            equip.status = 0
+            equip.save(update_fields=['status'])
 
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+#docker-compose exec jokoson-rest python manage.py createsuperuser
+
 docker-compose exec jokoson-rest python manage.py test jokoson.test.user
 docker-compose exec jokoson-rest python manage.py test jokoson.test.manufacture
 docker-compose exec jokoson-rest python manage.py test jokoson.test.model

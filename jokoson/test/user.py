@@ -69,16 +69,21 @@ class AdminUpdateUserTest(APITestCase):
         self.superuser = User.objects.create_superuser(**td_john)
         self.client.login(**td_john)
 
-        td_mike = TestData.user['mike']
+        self.td_mike = TestData.user['mike']
         self.mike = serializers.TenantSerializer(
-            User.objects.create(**td_mike)).data
+            User.objects.create(**self.td_mike)).data
         self.mike.update({'first_name': 'Changed'}, )
 
     def test_update_user_with_admin_login(self):
+        mike = User.objects.get(username=self.td_mike['username'])
+        self.assertEqual(mike.last_login, None)
+        self.mike.pop('last_login')
+
         response = self.client.put(
             reverse('user-detail', args=[self.mike['id']]), self.mike)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['first_name'], 'Changed')
+        self.assertEqual(response.data['first_name'], self.mike['first_name'])
+
 
 
 class AdminDeleteUserTest(APITestCase):

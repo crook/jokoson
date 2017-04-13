@@ -33,7 +33,7 @@ class UserDeleteManufactureTest(APITestCase):
 
         self.client.logout()
 
-    def test_delete_model(self):
+    def test_delete_manufacture(self):
         td_hako = TestData.manufacture['Hako']
         manufacture = models.Manufacture.objects.get(name=td_hako['name'])
         response = self.client.delete(
@@ -100,6 +100,11 @@ class AdminCreateManufactureTest(APITestCase):
         response = self.client.post(reverse('manufacture-list'), td_hako)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_create_manufacture_with_none_parameter(self):
+        # Haulotte has no cellphone
+        td_haulotte = TestData.manufacture['Haulotte']
+        response = self.client.post(reverse('manufacture-list'), td_haulotte)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 class AdminDeleteManufactureTest(APITestCase):
     """

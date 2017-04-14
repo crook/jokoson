@@ -33,7 +33,7 @@ import:
     order: 4
     properties:
       - tenant: "Tenant"
-      - equip: "Serial Number"
+      - equips: "Serial Number"
       - signtime: "Production Date"
       - starttime: "Start Time"
       - endtime: "End Time"

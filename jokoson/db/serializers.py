@@ -176,7 +176,7 @@ class OrderSerializer(serializers.ModelSerializer):
             if not self.instance:
                 self.instance = models.Order.objects.get(
                     tenant__username=self.initial_data['tenant'],
-                    equip__sn=self.initial_data['equip'])
+                    equips__sn=self.initial_data['equips'])
         except self.Meta.model.DoesNotExist:
             pass
 
@@ -207,17 +207,18 @@ class OrderSerializer(serializers.ModelSerializer):
             'Manufacture': {},
         }
 
+        # Only support one-equip for each order
         for item in mapper:
             if 'Order' in item:
                 for key, value in item['Order'].items():
                     if key == 'Serial Number':
-                        info['Order'][key] = order[value]['sn']
+                        info['Order'][key] = order[value][0]['sn']
                     elif key == 'Tenant':
                         info['Order'][key] = order[value]['username']
                     else:
                         info['Order'][key] = order[value]
             if 'Equip' in item:
-                equip = order['equip']
+                equip = order['equips'][0]
                 for key, value in item['Equip'].items():
                     if key == 'Model':
                         info['Equip'][key] = equip[value]['name']
@@ -226,14 +227,14 @@ class OrderSerializer(serializers.ModelSerializer):
                     else:
                         info['Equip'][key] = equip[value]
             if 'Model' in item:
-                model = order['equip']['model']
+                model = order['equips'][0]['model']
                 for key, value in item['Model'].items():
                     if key == 'Manufacture':
                         info['Model'][key] = model[value]['name']
                     else:
                         info['Model'][key] = model[value]
             if 'Manufacture' in item:
-                manufacture = order['equip']['manufacture']
+                manufacture = order['equips'][0]['manufacture']
                 for key, value in item['Manufacture'].items():
                     info['Manufacture'][key] = manufacture[value]
 

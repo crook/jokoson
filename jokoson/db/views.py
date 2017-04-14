@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import mixins
 
+from django.http import QueryDict
 from jokoson.db import models
 from jokoson.db import serializers
 from jokoson.db import filters as jksn_filters
@@ -86,8 +87,14 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         equips = []
+        sns = None
         # TODO: so far only suppory sn
-        for sn in serializer.initial_data.getlist('equips'):
+        if isinstance(serializer.initial_data, QueryDict):
+            sns = serializer.initial_data.getlist('equips')
+        else:
+            sns = serializer.initial_data['equips']
+
+        for sn in sns:
             equip = models.Equip.objects.get(sn=sn)
 
             # TODO: add more equip stauts

@@ -19,6 +19,12 @@ class CSVHandler(object):
                 for model in mapper:
                     for model_name, prop_map in model.items():
                         properties = self.get_model_props(row, prop_map)
+
+                        # FIXME: When upload CSV file, only support one equip for each order
+                        # Convert the equip sn into one list for later query
+                        if model_name == 'Order':
+                            properties['equips'] = [properties['equips']]
+
                         data = {'data': properties}
                         viewset = self.viewset.get_viewset(model_name)
                         serializer = viewset.get_serializer_class()(**data)
@@ -26,7 +32,7 @@ class CSVHandler(object):
                         try:
                             # serializer.validate(properties)
                             serializer.instance_query()
-                            serializer.is_valid()
+                            serializer.is_valid(raise_exception=True)
                         except Exception:
                             continue
 

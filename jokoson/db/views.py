@@ -7,6 +7,7 @@ from rest_framework import mixins
 
 from django.http import QueryDict
 from jokoson.db import models
+from jokoson.db import utils
 from jokoson.db import serializers
 from jokoson.db import filters as jksn_filters
 from jokoson.db import permissions as jksn_permissions
@@ -39,13 +40,10 @@ class ModelViewSet(viewsets.ModelViewSet):
     filter_fields = ('name',)
 
     def perform_create(self, serializer):
-        try:
-            manufacture = models.Manufacture.objects.get(
-                id=serializer.initial_data['manufacture'])
-        except ValueError:
-            manufacture = models.Manufacture.objects.get(
-                name=serializer.initial_data['manufacture'])
-
+        manufacture = utils.get_object_by_keys('Manufacture',
+                value=serializer.initial_data['manufacture'],
+                keys=['id', 'name']
+        )
         serializer.save(manufacture=manufacture)
 
 
@@ -59,20 +57,14 @@ class EquipViewSet(viewsets.ModelViewSet):
         'gps_status')
 
     def perform_create(self, serializer):
-        try:
-            manufacture = models.Manufacture.objects.get(
-                id=serializer.initial_data['manufacture'])
-        except ValueError:
-            manufacture = models.Manufacture.objects.get(
-                name=serializer.initial_data['manufacture'])
-
-        try:
-            model = models.Model.objects.get(
-                id=serializer.initial_data['model'])
-        except ValueError:
-            model = models.Model.objects.get(
-                name=serializer.initial_data['model'])
-
+        manufacture = utils.get_object_by_keys('Manufacture',
+                value=serializer.initial_data['manufacture'],
+                keys=['id', 'name']
+        )
+        model = utils.get_object_by_keys('Model',
+                value=serializer.initial_data['model'],
+                keys=['id', 'name']
+        )
         serializer.save(manufacture=manufacture, model=model, status=0)
 
 
@@ -110,13 +102,11 @@ class OrderViewSet(viewsets.ModelViewSet):
             equip.save(update_fields=['status'])
             equips.append(equip)
 
-        try:
-            tenant = get_user_model().objects.get(
-                id=serializer.initial_data['tenant'])
-        except ValueError:
-            tenant = get_user_model().objects.get(
-                username=serializer.initial_data['tenant'])
-
+        # Set tenant
+        tenant = utils.get_object_by_keys(get_user_model(),
+                value=serializer.initial_data['tenant'],
+                keys=['id', 'username']
+        )
         serializer.save(equips=equips, tenant=tenant)
 
     def destroy(self, request, *args, **kwargs):
@@ -132,7 +122,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 
 class CSVViewSet(mixins.CreateModelMixin,
-                 viewsets.GenericViewSet):
+                 viewsets.ViewSet):
     ViewSetMap = {
         'Manufacture': ManufactureViewSet(),
         'Order': OrderViewSet(),

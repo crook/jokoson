@@ -42,6 +42,7 @@ class TenantFilter(object):
 class EquipFilter(object):
     QueryParaMapping = {
         'manufacture': 'manufacture__name',
+        'model': 'model__name',
         'category': 'category__name',
     }
 

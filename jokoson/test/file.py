@@ -58,4 +58,6 @@ class CSVDownloadTest(APITestCase):
         self.client.post(reverse('csv-list'), data, format='multipart')
 
     def test_download_file(self):
-        self.client.get(reverse('csv-list'))
+        response = self.client.get(reverse('csv-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['content']), 4)

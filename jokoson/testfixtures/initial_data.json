@@ -121,7 +121,7 @@
 	"pk": 1,
 	"fields": {
 		"tenant": 2,
-		"equips": ["ME 111501"],
+		"equips": [2],
 		"signtime": "2016-12-29T00:00:39Z",
 		"starttime": "2017-10-30T12:38:57Z",
 		"endtime": "2018-10-30T12:38:57Z",
@@ -135,7 +135,7 @@
 	"pk": 3,
 	"fields": {
 		"tenant": 1,
-		"equips": ["ME 112104"],
+		"equips": [1],
 		"signtime": "2016-12-29T00:04:07Z",
 		"starttime": "2019-10-30T12:38:57Z",
 		"endtime": "2020-10-30T12:38:57Z",
@@ -149,7 +149,7 @@
 	"pk": 5,
 	"fields": {
 		"tenant": 1,
-		"equips": ["ME 111501","ME 112104"],
+		"equips": [1, 2],
 		"signtime": "2016-12-29T00:04:07Z",
 		"starttime": "2019-10-30T12:38:57Z",
 		"endtime": "2020-10-30T12:38:57Z",

@@ -25,6 +25,12 @@ class AdminCreateModelTest(APITestCase):
         response = self.client.post(reverse('model-list'), td_star_10)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_create_model_with_invalid_manufacture(self):
+        td_star_10 = TestData.model['star-10']
+        invalid_model = copy.deepcopy(td_star_10)
+        invalid_model['manufacture'] ='Not-Exist'
+        response = self.client.post(reverse('model-list'), invalid_model)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 class AdminDeleteModelTest(APITestCase):
     """

@@ -29,6 +29,20 @@ class AdminCreateEquipTest(APITestCase):
         response = self.client.post(reverse('equip-list'), td_equip)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_create_equip_with_invalid_manufacture(self):
+        td_equip = TestData.equip['ME 112104']
+        invalid_equip = copy.deepcopy(td_equip)
+        invalid_equip['manufacture'] = None
+        response = self.client.post(reverse('equip-list'), invalid_equip)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_equip_with_invalid_model(self):
+        td_equip = TestData.equip['ME 112104']
+        invalid_equip = copy.deepcopy(td_equip)
+        invalid_equip['model'] = 'Not-Exist'
+        response = self.client.post(reverse('equip-list'), invalid_equip)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
 
 class AdminDeleteEquipTest(APITestCase):
     """
@@ -98,6 +112,18 @@ class AdminListEquipTest(APITestCase):
 
     def test_list_equip_with_name_filter_with_admin_login(self):
         equip = {'sn': TestData.equip['ME 112104']['sn']}
+        response = self.client.get(reverse('equip-list'), equip)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_list_equip_with_model_name_filter_with_admin_login(self):
+        equip = {'model': TestData.model['star-10']['name']}
+        response = self.client.get(reverse('equip-list'), equip)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_list_equip_with_manufacture_name_filter_with_admin_login(self):
+        equip = {'manufacture': TestData.manufacture['Haulotte']['name']}
         response = self.client.get(reverse('equip-list'), equip)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)

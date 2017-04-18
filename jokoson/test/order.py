@@ -19,10 +19,17 @@ class AdminCreateOrderTest(APITestCase):
         # Create a manufacture `Haulotte`
         td_Haulotte = TestData.manufacture['Haulotte']
         self.client.post(reverse('manufacture-list'), td_Haulotte)
+        # Create a manufacture `Hako`
+        td_Hako = TestData.manufacture['Hako']
+        self.client.post(reverse('manufacture-list'), td_Hako)
 
         # Create a model `star 10` associated to Haulotte
         star_10 = copy.deepcopy(TestData.model['star-10'])
         self.client.post(reverse('model-list'), star_10)
+
+        # Create a model `star 8` associated to Haulotte
+        star_8 = copy.deepcopy(TestData.model['star-8'])
+        self.client.post(reverse('model-list'), star_8)
 
         # Create an equipment `ME 112104` associated to manufacture `Haulotte`
         # and model `star 10`
@@ -117,6 +124,13 @@ class AdminListOrderTest(APITestCase):
         # Create a manufacture `Haulotte`
         td_Haulotte = TestData.manufacture['Haulotte']
         self.client.post(reverse('manufacture-list'), td_Haulotte)
+        # Create a manufacture `Hako`
+        td_Hako = TestData.manufacture['Hako']
+        self.client.post(reverse('manufacture-list'), td_Hako)
+
+        # Create a model `star 8` associated to Haulotte
+        star_8 = TestData.model['star-8']
+        self.client.post(reverse('model-list'), star_8)
 
         # Create a model `star 10` associated to Haulotte
         star_10 = TestData.model['star-10']
@@ -125,6 +139,9 @@ class AdminListOrderTest(APITestCase):
         # Create an equipment `ME 112104` associated to manufacture `Haulotte`
         # and model `star 10`
         equip = TestData.equip['ME 112104']
+        self.client.post(reverse('equip-list'), equip)
+
+        equip = TestData.equip['ME 112108']
         self.client.post(reverse('equip-list'), equip)
 
         # Create an order to associated to tenant `Mike` and the
@@ -136,10 +153,15 @@ class AdminListOrderTest(APITestCase):
         order['tenant'] = TestData.user['mike']['username']
         self.client.post(reverse('order-list'), order)
 
+        order = copy.deepcopy(TestData.orders['ME 112108'])
+        # Must set the tenant of the order
+        order['tenant'] = TestData.user['mike']['username']
+        self.client.post(reverse('order-list'), order)
+
     def test_list_order_with_admin_login(self):
         response = self.client.get(reverse('order-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 2)
 
     def test_get_order_detail_with_admin_login(self):
         response = self.client.get(reverse('order-list'))
@@ -148,11 +170,62 @@ class AdminListOrderTest(APITestCase):
             reverse('order-detail', args=[order['id']]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_list_order_with_name_filter_with_admin_login(self):
-        order_query = {'equips_sn': TestData.orders['ME 112104']['equips']}
+    def test_list_order_with_equips_filter_with_admin_login(self):
+        #  Test http://ip/api/order/?equips_sn=ME%20112104
+        order_query = {'equips_sn': 'ME 112104'}
         response = self.client.get(reverse('order-list'), order_query)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+        # /api/order/?equips_sn=ME%20112104&equips_sn=ME%20112108
+        order_query = {'equips_sn': ['ME 112104','ME 112108']}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        #  Test http://ip/api/order/?equips_model=star-8
+        order_query = {'equips_model': 'star-8'}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        #  /api/order/?equips_model=star-8&equips_model=star-10
+        order_query = {'equips_model': ['star-8','star-10']}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        #  Test http://ip/api/order/?equips_manufacture=Hako
+        order_query = {'equips_manufacture': 'Hako'}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        #  api/order/?equips_manufacture=Hakox&?equips_manufacture=Haulotte
+        order_query = {'equips_manufacture': ['Hako','Haulotte']}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_list_order_with_tenant_filter_with_admin_login(self):
+        order_query = {'tenant': 'mike'}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_list_order_with_cost_filter_with_admin_login(self):
+        order_query = {'total_cost': TestData.orders['ME 112104']['total_cost']}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['total_cost'], order_query['total_cost'])
+
+        # 2 order with '9000' and '30000' cost.
+        order_query = {'max_cost': '40000'}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+        order_query = {'min_cost': '9001'}
+        response = self.client.get(reverse('order-list'), order_query)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['total_cost'], TestData.orders['ME 112108']['total_cost'])
 
 
 class AdminUpdateOrderTest(APITestCase):
@@ -410,10 +483,16 @@ class UserListOrderTest(APITestCase):
         # Create a manufacture `Haulotte`
         td_Haulotte = TestData.manufacture['Haulotte']
         self.client.post(reverse('manufacture-list'), td_Haulotte)
+        # Create a manufacture `Hako`
+        td_Hako = TestData.manufacture['Hako']
+        self.client.post(reverse('manufacture-list'), td_Hako)
 
         # Create a model `star 10` associated to Haulotte
         star_10 = copy.deepcopy(TestData.model['star-10'])
         self.client.post(reverse('model-list'), star_10)
+        # Create a model `star 8` associated to Hako
+        star_8 = copy.deepcopy(TestData.model['star-8'])
+        self.client.post(reverse('model-list'), star_8)
 
         # Create an equipment `ME 112104` associated to manufacture `Haulotte`
         # and model `star 10`
@@ -432,13 +511,13 @@ class UserListOrderTest(APITestCase):
         self.client.post(reverse('user-list'), mike)
         self.client.login(**mike)
 
-        # Create an equipment `ME 112108` associated to manufacture `Haulotte`
+        # Create an equipment `ME 111501` associated to manufacture `Haulotte`
         # and model `star 10`
-        equip = copy.deepcopy(TestData.equip['ME 112108'])
+        equip = copy.deepcopy(TestData.equip['ME 111501'])
         self.client.post(reverse('equip-list'), equip)
 
         # Create an order to associated to tenant `Mike` and the
-        # equipment `ME 111501`
+        # equipment `ME 112104-112108`
         order = copy.deepcopy(TestData.orders['ME 112104-112108'])
         # Must set the tenant of the order
         order['tenant'] = TestData.user['mike']['username']

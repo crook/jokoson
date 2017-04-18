@@ -14,6 +14,10 @@ class Manufacture(models.Model):
     office_phone = models.CharField(max_length=64)
     address = models.CharField(max_length=1024)
 
+    def __str__(self):
+        return 'Manufacture[id: {id}, name: {name}'.format(
+            id=self.id, name=self.name)
+
 
 # Equipment type
 #    name - the type name of the equipment, for example, star-10
@@ -22,8 +26,11 @@ class Manufacture(models.Model):
 class Model(models.Model):
     name = models.CharField(max_length=64, unique=True, )
     description = models.TextField(max_length=1024, default='')
-
     manufacture = models.ForeignKey('Manufacture', related_name='models')
+
+    def __str__(self):
+        return "Model[id:{id}, manufacture:'{m}']".format(
+            id=self.id, m=self.manufacture.name)
 
 
 # Equipment information to include GPS information
@@ -63,6 +70,10 @@ class Equip(models.Model):
     y = models.FloatField(null=True, blank=True)
     z = models.FloatField(null=True, blank=True)
 
+    def __str__(self):
+        return "Equip[id:{id}, sn:'{sn}', model:'{model}']".format(
+            id=self.id, sn=self.sn, model=self.model.name)
+
 
 # Order information to include the following information
 #   Tenant - The client to use the equipment
@@ -79,7 +90,7 @@ class Order(models.Model):
     tenant = models.ForeignKey('auth.User', related_name='orders')
     # Support for multiple equips
     equips = models.ManyToManyField('Equip', related_name='orders')
-    # Default format is 'iso-8601',
+    # Default format is 'iso-8601'
     # Othwise set "input_fomrats=YYYY-MM-DDThh:mm:ss"
     signtime = models.DateTimeField(auto_now_add=True)
     starttime = models.DateTimeField()
@@ -89,6 +100,11 @@ class Order(models.Model):
     total_cost = models.FloatField()
     # FIXME: add more order stuats?
     valid = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "Order[id:{id}, equips:'{sns}', total_cost:{cost}]".format(
+            id=self.id, sns=','.join(map(lambda x: x.sn, self.equips.all())),
+            cost=self.total_cost)
 
 #
 # class File(models.Model):

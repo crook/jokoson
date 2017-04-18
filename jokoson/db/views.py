@@ -1,3 +1,4 @@
+import copy
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -16,11 +17,31 @@ from jokoson.csv.csvhandler import CSVHandler
 
 class TenantViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TenantSerializer
-    filter_fields = ('username', 'id', 'email', 'is_staff')
     filter_class = jksn_filters.TenantFilter
 
     def get_queryset(self):
-        return get_user_model().objects.all()
+        queryset = get_user_model().objects.all()
+        query_params = self.request.query_params
+        if query_params:
+            query_para = copy.deepcopy(query_params).dict()
+            if not self.request.user.is_staff:
+                if ('username' in query_para and
+                        query_para['username'] != self.request.user.username):
+                    # Try to query another tenant, set self.qs as
+                    # an empty queryset object.
+                    return queryset.none()
+                else:
+                    # Only list the tenant for the authenticated user
+                    # if 'username' is not in the query_params or 'username'
+                    # in query_params is the same as the authenticated user.
+                    query_para.update({'username': self.request.user.username})
+            queryset = queryset.filter(**query_para)
+        else:
+            if not self.request.user.is_staff:
+                # Only list the tenant for the authenticated user
+                queryset = queryset.filter(username=self.request.user.username)
+
+        return queryset
 
     def pre_save(self, obj):
         pass
@@ -52,9 +73,15 @@ class EquipViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EquipSerializer
     permission_classes = (jksn_permissions.EquipPermission,)
     filter_class = jksn_filters.EquipFilter
-    filter_fields = (
-        'sn', 'model', 'status', 'health', 'manufacture', 'category',
-        'gps_status')
+
+    def get_queryset(self):
+        queryset = models.Equip.objects.all()
+        if self.request.user.is_staff:
+            return queryset
+        else:
+            # Only query the equipments on which health is `OK` and
+            # status is `0`(available to sell or rent)
+            return queryset.filter(health='OK', status=0)
 
     def perform_create(self, serializer):
         manufacture = utils.get_object_by_keys('Manufacture',
@@ -73,21 +100,21 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.OrderSerializer
     permission_classes = (jksn_permissions.OrderPermission,)
     filter_class = jksn_filters.OrderFilter
-    # Support query like '/api/order/?equips_manufacture=sn1,sn2'
-    filter_fields = (
-        'tenant', 'total_cost', 'equips_manufacture', 'equips_category', 'equips_sn')
 
     def perform_create(self, serializer):
         equips = []
-        sns = None
-        # TODO: so far only suppory sn
+        values = None
         if isinstance(serializer.initial_data, QueryDict):
-            sns = serializer.initial_data.getlist('equips')
+            values = serializer.initial_data.getlist('equips')
         else:
-            sns = serializer.initial_data['equips']
+            values = serializer.initial_data['equips']
 
-        for sn in sns:
-            equip = models.Equip.objects.get(sn=sn)
+        # The query value list of Equip could be 'equip.sn', 'equip.model' or
+        # 'equip.manufacture'.
+        SEARCH_KEYS = ['sn', 'model__name', 'manufacture__name']
+        for value in values:
+            equip = utils.get_object_by_keys('Equip', value=value,
+                                                keys=SEARCH_KEYS)
 
             # TODO: add more equip stauts
             if equip.status != 0:

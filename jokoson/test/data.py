@@ -71,8 +71,8 @@ class TestData(object):
         'ME 112108': {
             'sn': 'ME 112108',
             'description': 'This is ME 112108!',
-            'manufacture': manufacture['Haulotte']['name'],
-            'model': model['star-10']['name'],
+            'manufacture': manufacture['Hako']['name'],
+            'model': model['star-8']['name'],
             'status': 0,
             'health': 'OK',
             'gps_status': 2,
@@ -117,6 +117,16 @@ class TestData(object):
             'total_cost': 10000.00,
             'valid': True,
             'duration': '365 00:00:00',
+        },
+        'ME 112108': {
+            'tenant': None,
+            'equips': 'ME 112108',
+            'equips': [equip['ME 112108']['sn']],
+            'starttime': '2017-10-30T12:38:57',
+            'endtime': '2019-10-30T12:38:57',
+            'total_cost': 30000.00,
+            'valid': True,
+            'duration': '730 00:00:00',
         },
         'ME 112104-112108': {
             'tenant': None,

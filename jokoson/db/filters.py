@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+import django_filters
 from jokoson.db import models
 
 
@@ -9,99 +10,60 @@ from jokoson.db import models
 #   4. Update view
 # And it is targeted to filter the right queryset.
 
-class TenantFilter(object):
+class TenantFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = get_user_model()
-
-    def __init__(self, query_params, queryset, request):
-        if query_params:
-            query_para = query_params.dict()
-            if not request.user.is_staff:
-                if ('username' in query_para and
-                        query_para['username'] != request.user.username):
-                    # Try to query another tenant, set self.qs as
-                    # an empty queryset object.
-                    self.qs = queryset.none()
-                    return
-                else:
-                    # Only list the tenant for the authenticated user
-                    # if 'username' is not in the query_params or 'username'
-                    # in query_params is the same as the authenticated user.
-                    query_para.update({'username': request.user.username})
-
-            self.qs = queryset.filter(**query_para)
-        else:
-            if request.user.is_staff:
-                # List all the tenants
-                self.qs = queryset
-            else:
-                # Only list the tenant for the authenticated user
-                self.qs = queryset.filter(username=request.user.username)
+        fields = ('username', 'id', 'email', 'is_staff')
+        exclude = ['format', 'password']
 
 
-class EquipFilter(object):
-    QueryParaMapping = {
-        'manufacture': 'manufacture__name',
-        'model': 'model__name',
-        'category': 'category__name',
-    }
+class EquipFilter(django_filters.rest_framework.FilterSet):
+    manufacture = django_filters.CharFilter(name="manufacture__name")
+    model = django_filters.CharFilter(name="model__name")
+    #category = django_filters.CharFilter(name="category__name")
 
     class Meta:
         model = models.Equip
-
-    def __init__(self, query_params, queryset, request):
-        if query_params:
-            query_para = dict()
-
-            for key, value in query_params.dict().items():
-                if key in self.QueryParaMapping:
-                    query_para[self.QueryParaMapping[key]] = value
-                else:
-                    query_para[key] = value
-
-            self.qs = queryset.filter(**query_para)
-        else:
-            if request.user.is_staff:
-                self.qs = queryset
-            else:
-                # Only query the equipments on which health is `OK` and
-                # status is `0`(available to sell or rent)
-                self.qs = queryset.filter(health='OK', status=0)
+        fields = [
+            'sn', 'model', 'status', 'health', 'manufacture', 'gps_status',
+        ]
+        exclude = ['format']
 
 
-class OrderFilter(object):
-    QueryParaMapping = {
-        'equips_sn': 'equips__sn',
-        'equips_model': 'equips__model',
-        'category': 'equips__category__name',
-        'manufacture': 'equips__manufacture__name',
-    }
+class OrderFilter(django_filters.rest_framework.FilterSet):
+    # TODO: support query by id or name
+    equips_model = django_filters.ModelMultipleChoiceFilter(
+        name="equips__model__name",
+        to_field_name='name',
+        lookup_expr='in',
+        queryset=models.Model.objects.all()
+    )
+    equips_manufacture = django_filters.ModelMultipleChoiceFilter(
+        name="equips__manufacture__name",
+        to_field_name='name',
+        lookup_expr='in',
+        queryset=models.Manufacture.objects.all()
+    )
+    equips_sn = django_filters.ModelMultipleChoiceFilter(
+        name='equips__sn',
+        to_field_name='sn',
+        lookup_expr='in',
+        queryset=models.Equip.objects.all()
+    )
+
+    tenant = django_filters.CharFilter(name="tenant__username")
+    #category = django_filters.CharFilter(name="category__name")
+    max_cost = django_filters.NumberFilter(name="total_cost", lookup_expr='lte')
+    min_cost = django_filters.NumberFilter(name="total_cost", lookup_expr='gte')
+    endtime = django_filters.DateFilter(name="endtime", lookup_expr='lte')
+    starttime = django_filters.DateFilter(name="starttime", lookup_expr='gte')
 
     class Meta:
         model = models.Order
-
-    def __init__(self, query_params, queryset, request):
-        if query_params:
-            query_para = dict()
-
-            for key, value in query_params.dict().items():
-                if key in self.QueryParaMapping:
-                    query_para[self.QueryParaMapping[key]] = value
-                else:
-                    query_para[key] = value
-
-            if not request.user.is_staff:
-                if ('tenant' in query_para and
-                        query_para['tenant'] != request.user.username):
-                    # Try to query another tenant, return empty queryset object
-                    self.qs = queryset.none()
-                    return
-                else:
-                    query_para.update({'tenant_id': request.user.id})
-
-            self.qs = queryset.filter(**query_para)
-        else:
-            if request.user.is_staff:
-                self.qs = queryset
-            else:
-                self.qs = queryset.filter(tenant_id=request.user.id)
+        fields = [
+            # Support query equip by sn, model, manufacture
+            'equips_sn', 'equips_model', 'equips_manufacture',
+            'tenant','total_cost', 'max_cost', 'min_cost',
+            'starttime', 'endtime'
+        ]
+        exclude = ['format']

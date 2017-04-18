@@ -143,9 +143,17 @@ class AdminListAllEquipTest(APITestCase):
         td_Haulotte = TestData.manufacture['Haulotte']
         self.client.post(reverse('manufacture-list'), td_Haulotte)
 
+        # Create a manufacture `Hako`
+        td_Hako = TestData.manufacture['Hako']
+        self.client.post(reverse('manufacture-list'), td_Hako)
+
         # Create a model `star 10` associate to Haulotte
         td_star_10 = TestData.model['star-10']
         self.client.post(reverse('model-list'), td_star_10)
+
+        # Create a model `star 8` associate to Hako
+        td_star_8 = TestData.model['star-8']
+        self.client.post(reverse('model-list'), td_star_8)
 
         # Create an equipment `ME 112104` associate to manufacture `Haulotte`
         # and model `star 10`
@@ -293,6 +301,18 @@ class UserListEquipTest(APITestCase):
 
     def test_list_equip_with_name_filter(self):
         equip = {'sn': TestData.equip['ME 112104']['sn']}
+        response = self.client.get(reverse('equip-list'), equip)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_list_equip_with_model_name_filter_without_admin_login(self):
+        equip = {'model': TestData.model['star-10']['name']}
+        response = self.client.get(reverse('equip-list'), equip)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_list_equip_with_manufacture_name_filter_without_admin_login(self):
+        equip = {'manufacture': TestData.manufacture['Haulotte']['name']}
         response = self.client.get(reverse('equip-list'), equip)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)

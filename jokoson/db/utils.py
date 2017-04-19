@@ -3,6 +3,9 @@ from rest_framework.exceptions import NotFound
 from jokoson.db import models
 from django.contrib.auth.models import User
 
+import logging
+logger = logging.getLogger(__file__)
+
 def get_object_by_keys(class_or_name, value=None, keys=[]):
     '''return the object by possible keys in order'''
     instance = None
@@ -18,9 +21,12 @@ def get_object_by_keys(class_or_name, value=None, keys=[]):
             instance = model.objects.get(**kwargs)
             break
         except:
+            logger.debug("Get {0} object by key:{1} does not exist".
+                    format(model.__name__, key))
             # possible exception: ValueError, DoesNotExist
             continue
     else:
+        logger.error('%s payload is not valid' %class_or_name)
         raise NotFound(detail='%s payload is not valid' %class_or_name)
 
     return instance

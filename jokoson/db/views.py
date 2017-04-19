@@ -14,6 +14,8 @@ from jokoson.db import filters as jksn_filters
 from jokoson.db import permissions as jksn_permissions
 from jokoson.csv.csvhandler import CSVHandler
 
+import logging
+logger = logging.getLogger(__file__)
 
 class TenantViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TenantSerializer
@@ -100,6 +102,16 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.OrderSerializer
     permission_classes = (jksn_permissions.OrderPermission,)
     filter_class = jksn_filters.OrderFilter
+
+    def get_queryset(self):
+        # Here we only filter with tenant id, let filter backend to
+        # continue filter the left query param.
+        queryset = self.queryset.filter(tenant_id=self.request.user.id)
+        # you can see other's order only if you are superuser.
+        if self.request.user.is_staff:
+            return self.queryset
+        return queryset
+
 
     def perform_create(self, serializer):
         equips = []
